@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SOM ASSOCIATES - INWARD MATERIAL</title>
+    <link href="https://jsdelivr.net" rel="stylesheet">
+    <style>
+        body { background-color: #f8f9fa; }
+        .inward-card { background: white; border-top: 5px solid #28a745; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .table-head { background-color: #28a745; color: white; text-align: center; font-weight: bold; }
+        .save-btn { background-color: #007bff; color: white; font-weight: bold; border-radius: 4px; padding: 10px 30px; }
+    </style>
+</head>
+<body>
+
+<div class="container my-5">
+    <div class="p-4 inward-card">
+        <h3 class="text-center mb-4 text-success fw-bold">INWARD MATERIAL ENTRY DESK</h3>
+        
+        <table class="table table-bordered align-middle">
+            <thead class="table-head">
+                <tr>
+                    <th style="width: 10%;">Sr.No</th>
+                    <th>PRODUCT NAME</th>
+                    <th style="width: 15%;">PRODUCT SIZE</th>
+                    <th style="width: 15%;">COLOUR</th>
+                    <th style="width: 15%;">PRICE (₹)</th>
+                    <th style="width: 12%;">QTY TO ADD</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><input type="text" id="inw_sr" class="form-control text-center fw-bold" placeholder="001"></td>
+                    <td><input type="text" id="inw_name" class="form-control" placeholder="e.g. HARMONY SD 780"></td>
+                    <td><input type="text" id="inw_size" class="form-control text-center" placeholder="31 X 18 X 9"></td>
+                    <td><input type="text" id="inw_color" class="form-control text-center" placeholder="SAGE"></td>
+                    <td><input type="number" id="inw_price" class="form-control text-center" placeholder="36690"></td>
+                    <td><input type="number" id="inw_qty" class="form-control text-center fw-bold" value="1"></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="text-end mt-4">
+            <button class="btn save-btn shadow-sm" onclick="saveInwardStock()">➕ Stock Me Maal Jodein</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    function saveInwardStock() {
+        let stockData = {
+            sr_no: document.getElementById('inw_sr').value,
+            product_name: document.getElementById('inw_name').value,
+            product_size: document.getElementById('inw_size').value,
+            colour: document.getElementById('inw_color').value,
+            price: document.getElementById('inw_price').value,
+            qty: document.getElementById('inw_qty').value
+        };
+
+        if(!stockData.product_name || !stockData.qty) {
+            alert("Kripya Product Name aur Qty zaroor bharein!");
+            return;
+        }
+
+        fetch('/api/add_stock', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(stockData)
+        })
+        .then(res => res.json())
+        .then(data => {
+            if(data.status === 'success') {
+                alert("✓ " + data.message);
+                document.getElementById('inw_sr').value = '';
+                document.getElementById('inw_name').value = '';
+                document.getElementById('inw_size').value = '';
+                document.getElementById('inw_color').value = '';
+                document.getElementById('inw_price').value = '';
+                document.getElementById('inw_qty').value = '1';
+            } else {
+                alert("Error: " + data.message);
+            }
+        })
+        .catch(err => alert("Server Error: " + err));
+    }
+</script>
+</body>
+</html>

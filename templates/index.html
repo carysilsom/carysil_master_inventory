@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CARYSIL MASTER INVENTORY ACCOUNTING SYSTEM</title>
+    <link href="https://jsdelivr.net" rel="stylesheet">
+    <style>
+        body { background-color: #0b0f19; font-family: 'Segoe UI', Arial, sans-serif; color: #f8fafc; }
+        .software-header { background: linear-gradient(135deg, #111827, #1f2937); color: #ffffff; padding: 25px; font-weight: 800; letter-spacing: 1px; border-bottom: 4px solid #dc2626; text-shadow: 2px 2px 5px rgba(0,0,0,0.7); }
+        
+        /* Navigation Tabs Look */
+        .nav-menu { background: #111827; padding: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.5); margin-bottom: 35px; display: flex; justify-content: center; border-radius: 0 0 15px 15px; border-bottom: 1px solid #374151; }
+        .nav-link-custom { padding: 15px 40px; color: #9ca3af; font-weight: 800; text-decoration: none; cursor: pointer; transition: all 0.3s ease; border-radius: 8px; margin: 5px; font-size: 15px; letter-spacing: 1px; }
+        .nav-link-custom:hover { background: rgba(255,255,255,0.05); color: #fff; }
+        .nav-link-custom.active-tab { color: #ffffff; background-color: #dc2626; box-shadow: 0 4px 15px rgba(220, 38, 38, 0.4); }
+        
+        .tab-content-panel { display: none; background: #111827; border-radius: 12px; padding: 30px; box-shadow: 0 15px 35px rgba(0,0,0,0.6); border: 1px solid #1f2937; }
+        .tab-content-panel.active-panel { display: block; }
+
+        /* BADA AUR CHAMAKILA HEAVY SEARCH BAR DESK */
+        .search-box-container { max-width: 750px; margin: 15px auto 40px auto; display: flex; box-shadow: 0 0 30px rgba(220, 38, 38, 0.4); border-radius: 50px; overflow: hidden; border: 3px solid #dc2626; background: #ffffff; }
+        .search-input { border: none; padding: 18px 30px; font-size: 20px; width: 85%; outline: none; color: #0f172a; font-weight: 700; letter-spacing: 1px; }
+        .search-btn { width: 15%; border: none; background: linear-gradient(135deg, #dc2626, #ef4444); color: white; font-size: 24px; cursor: pointer; transition: 0.2s; }
+
+        /* HEAVY PRODUCT GROUP HEADER LOOK WITH SHADOW */
+        .product-group-header { background: linear-gradient(90deg, #1e1b4b, #2e1065) !important; color: #f59e0b !important; font-weight: 900 !important; font-size: 18px !important; text-align: left !important; padding-left: 25px !important; border-left: 8px solid #f59e0b !important; height: 55px !important; vertical-align: middle !important; text-shadow: 1px 1px 2px #000; letter-spacing: 1px; }
+        
+        /* 45px Rows layout configuration */
+        .excel-header { background: linear-gradient(135deg, #1f2937, #111827) !important; color: #f3f4f6 !important; font-weight: 800; text-transform: uppercase; text-align: center; font-size: 15px; border-bottom: 2px solid #374151 !important; }
+        .table { color: #f8fafc !important; border-color: #1f2937 !important; margin-bottom: 0px !important; }
+        .excel-row { text-align: center; font-weight: 700; font-size: 16px; background: #111827; height: 45px !important; transition: all 0.15s ease; border-bottom: 1px solid #1f2937; }
+        .excel-row:hover { background-color: #1f2937 !important; }
+        
+        /* High contrast bright showroom colors */
+        .text-bright-white { color: #ffffff !important; font-weight: 800; }
+        .text-bright-size { color: #38bdf8 !important; font-weight: 800; }
+        .text-bright-color { color: #fb923c !important; font-weight: 800; }
+        .text-bright-price { color: #f43f5e !important; font-weight: 800; font-size: 16px; }
+        
+        /* Color coded markers mapping */
+        .badge-qty { font-size: 15px; padding: 6px 16px; border-radius: 20px; font-weight: 900; min-width: 60px; display: inline-block; box-shadow: 0 2px 5px rgba(0,0,0,0.3); }
+        .qty-green { background-color: #22c55e !important; color: #ffffff !important; }
+        .qty-yellow { background-color: #eab308 !important; color: #ffffff !important; }
+        .qty-red { background-color: #ef4444 !important; color: #ffffff !important; }
+        
+        /* Large form formatting structures mapping */
+        .form-control { background-color: #0b0f19 !important; border: 2px solid #374151 !important; color: #ffffff !important; font-weight: 700; padding: 12px 18px !important; font-size: 16px !important; border-radius: 8px !important; }
+        .form-control:focus { box-shadow: 0 0 12px rgba(220, 38, 38, 0.4) !important; border-color: #dc2626 !important; background-color: #111827 !important; }
+        .bill-card, .inward-card { background: #111827; border: 1px solid #1f2937; border-radius: 12px; }
+        .btn-blue-custom { background: linear-gradient(135deg, #3b82f6, #1d4ed8) !important; color: white !important; font-weight: 800; border: none; padding: 10px 24px; border-radius: 6px; }
+        .btn-green-heavy { background: linear-gradient(135deg, #22c55e, #15803d) !important; color: white !important; font-weight: 800; font-size: 18px; border: none; padding: 15px 40px; border-radius: 8px; width: 100%; box-shadow: 0 5px 15px rgba(34, 197, 94, 0.3); letter-spacing: 1px; }
+        .btn-blue-heavy { background: linear-gradient(135deg, #3b82f6, #1d4ed8) !important; color: white !important; font-weight: 800; font-size: 18px; border: none; padding: 15px 40px; border-radius: 8px; width: 100%; box-shadow: 0 5px 15px rgba(59, 130, 246, 0.3); letter-spacing: 1px; }
+    </style>
+</head>
+<body>
+
+<div class="software-header text-center shadow-sm">
+    <h2>CARYSIL - SOM ASSOCIATES STOCK MANAGEMENT INVENTORY</h2>
+</div>
+
+<div class="container mt-2">
+    <div class="nav-menu">
+        <div class="nav-link-custom active-tab" onclick="switchTab('search-desk', this)">🔍 SEARCH DESK</div>
+        <div class="nav-link-custom" onclick="switchTab('billing-desk', this)">💳 BILLING DESK</div>
+        <div class="nav-link-custom" onclick="switchTab('inward-desk', this)">📥 INWARD ENTRY</div>
+    </div>
+</div>
+
+<div class="container mb-5">
+    
+    <!-- 1. SEARCH PANEL -->
+    <div id="search-desk" class="tab-content-panel active-panel">
+        <h4 class="text-center mb-3" style="color: #ef4444; font-weight: 800; letter-spacing: 1px;">LIVE STOCK VIEWER</h4>
+        <div class="search-box-container">
+            <input type="text" id="liveSearch" class="search-input" placeholder="Type Product Name or Size... (e.g. SALSA, BEETHOVEN)">
+            <button class="search-btn" onclick="triggerManualSearch()">🔍</button>
+        </div>
+        <div class="table-responsive rounded border border-secondary shadow">
+            <table class="table table-bordered table-striped align-middle">
+                <thead class="excel-header">
+                    <tr>
+                        <th style="padding: 15px; width: 8%;">Sr No.</th>
+                        <th style="width: 42%;">PRODUCT DESCRIPTION</th>
+                        <th style="width: 15%;">PRODUCT SIZE</th>
+                        <th style="width: 15%;">COLOUR</th>
+                        <th style="width: 12%;">PRICE</th>
+                        <th style="width: 8%;">QTY STATUS</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    <tr><td colspan="6" class="text-muted text-center py-4">Kripya search bar me kuchh type karein...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!-- 2. BILLING PANEL -->
+    <div id="billing-desk" class="tab-content-panel">
+        <div class="bill-card p-4">
+            <h4 class="mb-4 text-center" style="color: #ef4444; font-weight: 800; letter-spacing: 1px;">SOM ASSOCIATES BILL BOOK DESK</h4>
+            <div class="row g-4 mb-4">
+                <div class="col-md-6">
+                    <label class="form-label fw-bold text-warning" style="font-size: 15px;">Party Name & Address Description</label>
+                    <input type="text" id="partyName" class="form-control" placeholder="Customer Name & Location Details">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label fw-bold text-warning" style="font-size: 15px;">Mobile No.</label>
+                    <input type="text" id="mobileNo" class="form-control" placeholder="10 Digit Mobile Number">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label fw-bold text-warning" style="font-size: 15px;">Bill Number</label>
+                    <input type="text" id="billNo" class="form-control" placeholder="e.g. SOM-999">
+                </div>
+            </div>
+            
+            <div class="table-responsive rounded border border-secondary shadow mb-4">
+                <table class="table table-bordered align-middle m-0">
+                    <thead class="table-dark text-center">
+                        <tr style="height: 48px; font-size: 15px;">
+                            <th>Particulars / Product Description (Exact Match)</th>
+                            <th style="width:12%">Size</th>
+                            <th style="width:12%">Colour</th>
+                            <th style="width:10%">Quantity</th>
+                            <th style="width:12%">Rate (₹)</th>
+                            <th style="width:12%">Discount %</th>
+                        </tr>
+                    </thead>
+                    <tbody id="billItemsBody">
+                        <tr class="bill-item-row" style="height: 45px;">
+                            <td><input type="text" class="form-control part-input" placeholder="Click '🛒 Bill' from Search Desk"></td>
+                            <td><input type="text" class="form-control size-input" placeholder="Size"></td>
+                            <td><input type="text" class="form-control color-input" placeholder="Colour"></td>
+                            <td><input type="number" class="form-control qty-input text-center" value="1" min="1"></td>
+                            <td><input type="number" class="form-control rate-input text-center" value="0"></td>
+                            <td><input type="number" class="form-control discount-input text-center" value="0" placeholder="e.g. 25"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="row align-items-center mb-4">
+                <div class="col-md-6">
+                    <button class="btn btn-blue-custom" onclick="addNewBillRow()">＋ Add Manual Item Row</button>
+                </div>
+                <div class="col-md-6 ms-auto" style="max-width: 300px;">
+                    <label class="form-label fw-bold text-success" style="font-size: 15px;">💸 ADVANCE PAID AMOUNT (₹)</label>
+                    <input type="number" id="advancePaid" class="form-control text-center fw-bold text-success" value="0" style="font-size: 18px !important;">
+                </div>
+            </div>
+
+            <div class="text-center mt-2">
+                <button class="btn btn-green-heavy shadow-lg" onclick="submitBillForm()">💾 SUBMIT COMMERCIAL BILL & PRINT CLEAR COMMERCIAL PDF</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. INWARD PANEL -->
+    <div id="inward-desk" class="tab-content-panel">
+        <div class="inward-card p-4">
+            <h4 class="mb-4 text-center text-success fw-bold" style="letter-spacing: 1px; font-weight: 800;">INWARD MATERIAL ENTRY DESK</h4>
+            <div class="table-responsive rounded border border-secondary shadow mb-4">
+                <table class="table table-bordered align-middle m-0">
+                    <thead class="table-success text-dark text-center fw-bold">
+                        <tr style="height: 48px; font-size: 15px;">
+                            <th style="width: 10%;">Sr.No</th>
+                            <th>PRODUCT DETAILS / EXACT DESCRIPTION</th>
+                            <th style="width: 15%;">PRODUCT SIZE</th>
+                            <th style="width: 15%;">COLOUR</th>
+                            <th style="width: 15%;">PRICE (₹)</th>
+                            <th style="width: 15%;">QTY TO ADD</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr style="height: 45px;">
+                            <td><input type="text" id="inw_sr" class="form-control text-center" placeholder="e.g. 051"></td>
+                            <td><input type="text" id="inw_name" class="form-control" placeholder="e.g. MAGIC SALSA / SINGLE BOWL"></td>
+                            <td><input type="text" id="inw_size" class="form-control text-center" placeholder="e.g. 18 X 16"></td>
+                            <td><input type="text" id="inw_color" class="form-control text-center" placeholder="e.g. NERA"></td>
+                            <td><input type="number" id="inw_price" class="form-control text-center" value="0"></td>
+                            <td><input type="number" id="inw_qty" class="form-control text-center fw-bold text-success" value="1" min="1"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="text-center">
+                <button class="btn btn-blue-heavy shadow-lg" onclick="saveInwardForm()">➕ INCREMENT LIVE MATERIAL IN SHOWROOM STOCK</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+<script>
+    function switchTab(panelId, element) {
+        document.querySelectorAll('.tab-content-panel').forEach(p => p.classList.remove('active-panel'));
+        document.querySelectorAll('.nav-link-custom').forEach(t => t.classList.remove('active-tab'));
+        document.getElementById(panelId).classList.add('active-panel');
+        if (element && element.classList) {
+            element.classList.add('active-tab');
+        } else if (element && element.length) {
+            element[1].classList.add('active-tab'); // Sets billing tab style active
+        }
+    }
+
+    const searchInput = document.getElementById('liveSearch');
+    if (searchInput) {
+        searchInput.addEventListener('input', function() {
+            executeSearch(this.value);
+        });
+    }
+
+    function triggerManualSearch() {
+        if (searchInput) executeSearch(searchInput.value);
+    }
+
+    function executeSearch(query) {
+        let body = document.getElementById('tableBody');
+        if(!query || query.trim() === '') {
+            body.innerHTML = '<tr><td colspan="6" class="text-muted text-center py-4">Kripya search bar me kuchh type karein...</td></tr>';
+            return;
+        }
+        
+        fetch('/api/search?q=' + encodeURIComponent(query))
+        .then(res => res.json())
+        .then(data => {
+            body.innerHTML = '';
+            if(data.length === 0) {
+                body.innerHTML = '<tr><td colspan="6" class="text-danger text-center py-4">Maaf kijiye, database me aisa koi product nahi mila!</td></tr>';
+                return;
+            }
+            let lastProduct = "";
+            data.forEach((item, index) => {
+                let qty = parseInt(item.quantity);
+                let badgeClass = "qty-green";
+                if (qty === 0) badgeClass = "qty-red";
+                else if (qty === 1 || qty === 2) badgeClass = "qty-yellow";
+
+                if (item.product_name !== lastProduct) {
+                    if (index > 0) {
+                        let gap = document.createElement('tr');
+                        gap.innerHTML = '<td colspan="6" style="height:20px; background:#0b0f19; border:none;"></td>';
+                        body.appendChild(gap);
+                    }
+                    let headingRow = document.createElement('tr');
+                    headingRow.innerHTML = '<td colspan="6" class="product-group-header">🟨 ' + item.product_name.toUpperCase() + '</td>';
+                    body.appendChild(headingRow);
+                    lastProduct = item.product_name;
+                }
+
+                let row = document.createElement('tr');
+                row.className = "excel-row";
+                
+                let escapeName = item.product_name.replace(/'/g, "\\'");
+                let escapeSize = item.product_size.replace(/'/g, "\\'");
+                let escapeColor = item.colour.replace(/'/g, "\\'");
+                
+                row.innerHTML = `
+                    <td style="color: #94a3b8; vertical-align: middle;">${item.sr_no || ''}</td>
+                    <td class="text-start ps-4 text-bright-white" style="vertical-align: middle;">
+                        <button class="btn btn-sm btn-primary me-2" style="font-size:11px; padding:2px 8px; font-weight:bold;" onclick="sendToBillingForm('${escapeName}', '${escapeSize}', '${escapeColor}', ${item.price})">🛒 Bill</button>
+                        ${item.product_name}
+                    </td>
+                    <td class="text-bright-size" style="vertical-align: middle;">${item.product_size}</td>
+                    <td class="text-bright-color" style="vertical-align: middle;">${item.colour}</td>
+                    <td class="text-bright-price" style="vertical-align: middle;">₹${item.price.toLocaleString('en-IN')}</td>
+                    <td style="vertical-align: middle;"><span class="badge-qty ${badgeClass}">${qty}</span></td>
+                `;
+                body.appendChild(row);
+            });
+        }).catch(err => {
+            body.innerHTML = '<tr><td colspan="6" class="text-danger text-center py-4">Search System Error</td></tr>';
+        });
+    }
+
+    function sendToBillingForm(name, size, colour, price) {
+        let tbody = document.getElementById('billItemsBody');
+        let rows = tbody.getElementsByClassName('bill-item-row');
+        let targetRow = rows[rows.length - 1];
+        let firstPart = targetRow.querySelector('.part-input').value;
+        
+        if (firstPart && firstPart.trim() !== "") {
+            addNewBillRow();
+            rows = tbody.getElementsByClassName('bill-item-row');
+            targetRow = rows[rows.length - 1];
+        }
+        
+        targetRow.querySelector('.part-input').value = name;
+        targetRow.querySelector('.size-input').value = size;
+        targetRow.querySelector('.color-input').value = colour;
+        targetRow.querySelector('.rate-input').value = price;
+        targetRow.querySelector('.qty-input').value = 1;
+        targetRow.querySelector('.discount-input').value = 0;
+        
+        let billingTabBtn = document.querySelectorAll('.nav-link-custom');
+        switchTab('billing-desk', billingTabBtn);
+    }
+
+    function addNewBillRow() {
+        let tbody = document.getElementById('billItemsBody');
+        let rows = tbody.getElementsByClassName('bill-item-row');
+        if(rows.length > 0) {
+            let firstRow = rows[0];
+            let newRow = firstRow.cloneNode(true);
+            let inputs = newRow.getElementsByTagName('input');
+            for(let i=0; i<inputs.length; i++) {
+                if(inputs[i].type === 'number') {
+                    inputs[i].value = inputs[i].className.includes('qty-input') ? 1 : 0;
+                } else {
+                    inputs[i].value = '';
+                }
+            }
+            tbody.appendChild(newRow);
+        }
+    }
+
+    function submitBillForm() {
+        let items = [];
+        let rows = document.getElementById('billItemsBody').rows;
+        for(let i=0; i<rows.length; i++) {
+            let part = rows[i].querySelector('.part-input').value;
+            if(part && part.trim() !== "") {
+                items.push({
+                    particulars: part,
+                    size: rows[i].querySelector('.size-input').value,
+                    colour: rows[i].querySelector('.color-input').value,
+                    qty: rows[i].querySelector('.qty-input').value,
+                    rate: rows[i].querySelector('.rate-input').value,
+                    discount: rows[i].querySelector('.discount-input').value || 0
+                });
+            }
+        }
+        if(items.length === 0) {
+            alert("⚠️ Error: Kripya bill me kam se kam ek product zaroor bharein!");
+            return;
+        }
+        let billData = {
+            bill_no: document.getElementById('billNo').value,
+            party_name: document.getElementById('partyName').value,
+            address: "Authorized Showroom Client",
+            mobile_no: document.getElementById('mobileNo').value,
+            bill_date: new Date().toLocaleDateString('en-IN'),
+            advance_paid: document.getElementById('advancePaid').value || 0,
+            items: items
+        };
+        fetch('/api/generate_bill', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(billData) })
+        .then(res => { if(res.ok) return res.blob(); return res.json().then(e => {throw new Error(e.message)}) })
+        .then(blob => {
+            let url = window.URL.createObjectURL(blob);
+            let a = document.createElement('a'); a.href = url; a.download = 'Invoice_' + billData.bill_no + '.pdf'; a.click();
+            alert("🎉 SUCCESS: Invoice generated successfully! Pure White background standard print out download ho chuka hai aur live stock perfectly deduct ho gaya hai.");
+            location.reload();
+        }).catch(err => alert("⚠️ Error: " + err.message));
+    }
+
+    function saveInwardForm() {
+        let d = {
+            sr_no: document.getElementById('inw_sr').value,
+            product_name: document.getElementById('inw_name').value.trim(),
+            product_size: document.getElementById('inw_size').value.trim(),
+            colour: document.getElementById('inw_color').value.trim(),
+            price: document.getElementById('inw_price').value,
+            qty: document.getElementById('inw_qty').value
+        };
+        fetch('/api/add_stock', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(d) })
+        .then(res => res.json()).then(resData => {
+            alert(resData.message);
+            if(resData.status === 'success') {
+                document.getElementById('inw_sr').value=''; document.getElementById('inw_name').value='';
+                document.getElementById('inw_size').value=''; document.getElementById('inw_color').value='';
+                document.getElementById('inw_price').value='0'; document.getElementById('inw_qty').value='1';
+            }
+        }).catch(err => alert("⚠️ Inward server failure connection error"));
+    }
+</script>
+</body>
+</html>
