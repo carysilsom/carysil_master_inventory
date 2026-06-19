@@ -42,12 +42,6 @@ def login():
     return render_template('login.html')
 
 
-@app.route('/')
-def home():
-    if not session.get("logged_in"):
-        return redirect("/login")
-
-    return render_template('index.html')
 
 
 @app.route('/login', methods=['GET', 'POST'])
