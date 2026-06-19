@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify, send_file
+from flask import Flask, render_template, request, jsonify, session, redirect
 import psycopg2
 from psycopg2.extras import RealDictCursor
 from reportlab.lib.pagesizes import letter
@@ -8,6 +8,10 @@ from reportlab.lib import colors
 import io
 
 app = Flask(__name__)
+app.secret_key = "carysil_secret_key"
+
+USERNAME = "carysilsom"
+PASSWORD = "Puneet2026"
 
 DATABASE_URL = "postgresql://neondb_owner:npg_kUGiCDj30LNW@ep-noisy-field-aozk7iqi.c-2.ap-southeast-1.aws.neon.tech/neondb?sslmode=require"
 
@@ -18,9 +22,52 @@ def get_db_connection():
 
 @app.route('/')
 def home():
+    if not session.get("logged_in"):
+        return redirect("/login")
+
     return render_template('index.html')
 
 
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+
+        if username == USERNAME and password == PASSWORD:
+            session['logged_in'] = True
+            return redirect('/')
+
+    return render_template('login.html')
+
+
+@app.route('/')
+def home():
+    if not session.get("logged_in"):
+        return redirect("/login")
+
+    return render_template('index.html')
+
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+
+        if username == USERNAME and password == PASSWORD:
+            session['logged_in'] = True
+            return redirect('/')
+
+    return render_template('login.html')
+
+
+@app.route('/logout')
+def logout():
+    session.clear()
+    return redirect('/login')
 @app.route('/api/search', methods=['GET'])
 def search_stock():
     query = request.args.get('q', '').strip()
