@@ -104,11 +104,64 @@
             </table>
         </div>
     </div>
-    <!-- 2. BILLING PANEL -->
+            <!-- 2. BILLING PANEL -->
     <div id="billing-desk" class="tab-content-panel">
         <div class="bill-card p-4">
+            <h4 class="mb-4 text-center" style="color: #ef4444; font-weight: 800; letter-spacing: 1px;">SOM ASSOCIATES BILL BOOK DESK</h4>
+            <div class="row g-4 mb-4">
+                <div class="col-md-6">
+                    <label class="form-label fw-bold text-warning" style="font-size: 16px;">Party Name & Address Description</label>
+                    <input type="text" id="partyName" class="form-control" placeholder="Customer Name & Location Details">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label fw-bold text-warning" style="font-size: 16px;">Mobile No.</label>
+                    <input type="text" id="mobileNo" class="form-control" placeholder="10 Digit Mobile Number">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label fw-bold text-warning" style="font-size: 16px;">Bill Number</label>
+                    <input type="text" id="billNo" class="form-control" placeholder="e.g. SOM-999">
+                </div>
+            </div>
+            
+            <div class="table-responsive rounded border border-secondary shadow mb-4">
+                <table class="table table-bordered align-middle m-0">
+                    <thead class="table-dark text-center">
+                        <tr style="height: 48px; font-size: 16px;">
+                            <th>Particulars / Product Description (Exact Match)</th>
+                            <th style="width:14%">Size</th>
+                            <th style="width:18%">Colour</th>
+                            <th style="width: 8%">Quantity</th>
+                            <th style="width:10%">Rate (₹)</th>
+                            <th style="width:8%">Discount %</th>
+                        </tr>
+                    </thead>
+                    <tbody id="billItemsBody">
+                        <tr class="bill-item-row" style="height: 45px;">
+                            <td><input type="text" class="form-control part-input" placeholder="Click '🛒 Bill' from Search Desk"></td>
+                            <td><input type="text" class="form-control size-input" placeholder="Size"></td>
+                            <td><input type="text" class="form-control color-input" placeholder="Colour"></td>
+                            <td><input type="number" class="form-control qty-input text-center" value="1" min="1"></td>
+                            <td><input type="number" class="form-control rate-input text-center" value="0"></td>
+                            <td><input type="number" class="form-control discount-input text-center" value="0" placeholder="e.g. 25"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="row align-items-center mb-4">
+                <div class="col-md-6">
+                    <button class="btn btn-blue-custom" onclick="addNewBillRow()">＋ Add Manual Item Row</button>
+                </div>
+                <div class="col-md-6 ms-auto" style="max-width: 300px;">
+                    <label class="form-label fw-bold text-success" style="font-size: 16px;">💸 ADVANCE PAID AMOUNT (₹)</label>
+                    <input type="number" id="advancePaid" class="form-control text-center fw-bold text-success" value="0" style="font-size: 18px !important;">
+                </div>
+            </div>
+
+            <div class="text-center mt-2">
+                <button class="btn btn-green-heavy shadow-lg" onclick="submitBillForm()">⬇ SUBMIT BILL & PDF</button>
+            </div>
         </div>
-    </div>
 
     <!-- 3. INWARD PANEL -->
     <div id="inward-desk" class="tab-content-panel">
