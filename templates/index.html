@@ -5,7 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CARYSIL MASTER INVENTORY ACCOUNTING SYSTEM</title>
     <meta name="google-site-verification" content="aKt63VfYN2xIgku11FRpZoXD4pfpKB5aob4EJsEJlnQ" />
-    <link href="https://jsdelivr.net" rel="stylesheet">
+    
+    <!-- FIXED: Added correct Bootstrap Icons CDN link -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    
     <style>
         body { background-color: #0b0f19; font-family: 'Segoe UI', Arial, sans-serif; color: #f8fafc; }
         .software-header { background: linear-gradient(135deg, #111827, #1f2937); color: #ffffff; padding: 25px; font-weight: 800; letter-spacing: 1px; border-bottom: 4px solid #dc2626; text-shadow: 2px 2px 5px rgba(0,0,0,0.7); }
@@ -62,9 +65,10 @@
 
 <div class="container mt-2">
     <div class="nav-menu">
-        <div class="nav-link-custom active-tab" onclick="switchTab('search-desk', this)">🔍 SEARCH DESK</div>
-        <div class="nav-link-custom" onclick="switchTab('billing-desk', this)">💳 BILLING DESK</div>
-        <div class="nav-link-custom" onclick="switchTab('inward-desk', this)">📥 INWARD ENTRY</div>
+        <!-- FIXED: Icons attached properly -->
+        <div class="nav-link-custom active-tab" onclick="switchTab('search-desk', this)"><i class="bi bi-search"></i> SEARCH DESK</div>
+        <div class="nav-link-custom" onclick="switchTab('billing-desk', this)"><i class="bi bi-receipt text-warning"></i> BILLING DESK</div>
+        <div class="nav-link-custom" onclick="switchTab('inward-desk', this)"><i class="bi bi-box-arrow-in-down text-success"></i> INWARD ENTRY</div>
     </div>
 </div>
 
@@ -75,7 +79,7 @@
         <h4 class="text-center mb-3" style="color: #ef4444; font-weight: 800; letter-spacing: 1px;">LIVE STOCK VIEWER</h4>
         <div class="search-box-container">
             <input type="text" id="liveSearch" class="search-input" placeholder="Type Product Name or Size... (e.g. SALSA, BEETHOVEN)">
-            <button class="search-btn" onclick="triggerManualSearch()">🔍</button>
+            <button class="search-btn" onclick="triggerManualSearch()"><i class="bi bi-search"></i></button>
         </div>
         <div class="table-responsive rounded border border-secondary shadow">
             <table class="table table-bordered table-striped align-middle">
@@ -95,22 +99,31 @@
             </table>
         </div>
     </div>
-    <!-- 2. BILLING PANEL -->
+
+    <!-- 2. BILLING DESK -->
     <div id="billing-desk" class="tab-content-panel">
         <div class="bill-card p-4">
-            <h4 class="mb-4 text-center" style="color: #ef4444; font-weight: 800; letter-spacing: 1px;">SOM ASSOCIATES BILL BOOK DESK</h4>
-            <div class="row g-4 mb-4">
-                <div class="col-md-6">
-                    <label class="form-label fw-bold text-warning" style="font-size: 15px;">Party Name & Address Description</label>
-                    <input type="text" id="partyName" class="form-control" placeholder="Customer Name & Location Details">
+            <h4 class="mb-4 text-center" style="color: #ef4444; font-weight: 800;">SOM ASSOCIATES BILL BOOK DESK</h4>
+            
+            <div class="row g-3 mb-3">
+                <div class="col-md-8">
+                    <label class="form-label fw-bold text-warning" style="font-size: 15px;">Customer Name</label>
+                    <input type="text" id="partyName" class="form-control" placeholder="Enter Customer Full Name">
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-4">
+                    <label class="form-label fw-bold text-warning" style="font-size: 15px;">Bill Number</label>
+                    <input type="text" id="billNo" class="form-control" placeholder="e.g. 1050">
+                </div>
+            </div>
+
+            <div class="row g-3 mb-4">
+                <div class="col-md-8">
+                    <label class="form-label fw-bold text-warning" style="font-size: 15px;">Customer Address</label>
+                    <input type="text" id="partyAddress" class="form-control" placeholder="Full Delivery Address & Location">
+                </div>
+                <div class="col-md-4">
                     <label class="form-label fw-bold text-warning" style="font-size: 15px;">Mobile No.</label>
                     <input type="text" id="mobileNo" class="form-control" placeholder="10 Digit Mobile Number">
-                </div>
-                <div class="col-md-3">
-                    <label class="form-label fw-bold text-warning" style="font-size: 15px;">Bill Number</label>
-                    <input type="text" id="billNo" class="form-control" placeholder="e.g. SOM-999">
                 </div>
             </div>
             
@@ -128,12 +141,12 @@
                     </thead>
                     <tbody id="billItemsBody">
                         <tr class="bill-item-row" style="height: 45px;">
-                            <td><input type="text" class="form-control part-input" placeholder="Click '🛒 Bill' from Search Desk"></td>
+                            <td><input type="text" class="form-control part-input" placeholder="Click 'Bill' from Search Desk"></td>
                             <td><input type="text" class="form-control size-input" placeholder="Size"></td>
                             <td><input type="text" class="form-control color-input" placeholder="Colour"></td>
                             <td><input type="number" class="form-control qty-input text-center" value="1" min="1"></td>
                             <td><input type="number" class="form-control rate-input text-center" value="0"></td>
-                            <td><input type="number" class="form-control discount-input text-center" value="0" placeholder="e.g. 25"></td>
+                            <td><input type="number" class="form-control discount-input text-center" value="0"></td>
                         </tr>
                     </tbody>
                 </table>
@@ -141,64 +154,73 @@
             
             <div class="row align-items-center mb-4">
                 <div class="col-md-6">
-                    <button class="btn btn-blue-custom" onclick="addNewBillRow()">＋ Add Manual Item Row</button>
+                    <button class="btn btn-blue-custom me-2" onclick="addNewBillRow()"><i class="bi bi-plus-circle"></i> Add Manual Item Row</button>
+                    <button class="btn btn-danger fw-bold" style="padding: 8px 18px;" onclick="removeLastBillRow()"><i class="bi bi-trash"></i> Remove Last Row</button>
                 </div>
                 <div class="col-md-6 ms-auto" style="max-width: 300px;">
-                    <label class="form-label fw-bold text-success" style="font-size: 15px;">💸 ADVANCE PAID AMOUNT (₹)</label>
-                    <input type="number" id="advancePaid" class="form-control text-center fw-bold text-success" value="0" style="font-size: 18px !important;">
+                    <label class="form-label fw-bold text-white" style="font-size: 15px;">ADVANCE PAID AMOUNT (₹)</label>
+                    <input type="number" id="advancePaid" class="form-control text-center fw-bold text-success" value="0">
                 </div>
             </div>
 
             <div class="text-center mt-2">
-                <button class="btn btn-green-heavy shadow-lg" onclick="submitBillForm()">💾 SUBMIT COMMERCIAL BILL & PRINT CLEAR COMMERCIAL PDF</button>
+                <button class="btn btn-green-heavy shadow-lg" onclick="submitBillForm()"><i class="bi bi-file-earmark-pdf"></i> SUBMIT BILL & GENERATE SAVE PDF</button>
             </div>
         </div>
     </div>
 
-    <!-- 3. INWARD PANEL -->
+    <!-- 3. INWARD DESK -->
     <div id="inward-desk" class="tab-content-panel">
         <div class="inward-card p-4">
-            <h4 class="mb-4 text-center text-success fw-bold" style="letter-spacing: 1px; font-weight: 800;">INWARD MATERIAL ENTRY DESK</h4>
-            <div class="table-responsive rounded border border-secondary shadow mb-4">
-                <table class="table table-bordered align-middle m-0">
-                    <thead class="table-success text-dark text-center fw-bold">
-                        <tr style="height: 48px; font-size: 15px;">
-                            <th style="width: 10%;">Sr.No</th>
-                            <th>PRODUCT DETAILS / EXACT DESCRIPTION</th>
-                            <th style="width: 15%;">PRODUCT SIZE</th>
-                            <th style="width: 15%;">COLOUR</th>
-                            <th style="width: 15%;">PRICE (₹)</th>
-                            <th style="width: 15%;">QTY TO ADD</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr style="height: 45px;">
-                            <td><input type="text" id="inw_sr" class="form-control text-center" placeholder="e.g. 051"></td>
-                            <td><input type="text" id="inw_name" class="form-control" placeholder="e.g. MAGIC SALSA / SINGLE BOWL"></td>
-                            <td><input type="text" id="inw_size" class="form-control text-center" placeholder="e.g. 18 X 16"></td>
-                            <td><input type="text" id="inw_color" class="form-control text-center" placeholder="e.g. NERA"></td>
-                            <td><input type="number" id="inw_price" class="form-control text-center" value="0"></td>
-                            <td><input type="number" id="inw_qty" class="form-control text-center fw-bold text-success" value="1" min="1"></td>
-                        </tr>
-                    </tbody>
-                </table>
+            <h4 class="mb-4 text-center text-success fw-bold" style="letter-spacing: 1px;">INWARD MATERIAL ENTRY DESK</h4>
+            
+            <div class="row mb-3 g-3">
+                <div class="col-6 col-md-2">
+                    <label class="form-label fw-bold text-warning" style="font-size: 15px;">Sr.No</label>
+                    <input type="text" id="inw_sr" class="form-control text-center" placeholder="e.g. 051">
+                </div>
+                <div class="col-md-8 d-none d-md-block"></div>
+                <div class="col-6 col-md-2">
+                    <label class="form-label fw-bold text-warning" style="font-size: 15px;">QTY TO ADD</label>
+                    <input type="number" id="inw_qty" class="form-control text-center fw-bold text-success" value="1" min="1">
+                </div>
             </div>
-            <div class="text-center">
-                <button class="btn btn-blue-heavy shadow-lg" onclick="saveInwardForm()">➕ INCREMENT LIVE MATERIAL IN SHOWROOM STOCK</button>
+
+            <div class="row g-3 mb-4">
+                <div class="col-md-4">
+                    <label class="form-label fw-bold text-white" style="font-size: 14px;">PRODUCT DETAILS / EXACT DESCRIPTION</label>
+                    <input type="text" id="inw_name" class="form-control" placeholder="e.g. MAGIC SALSA / SINGLE BOWL">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label fw-bold text-white" style="font-size: 14px;">PRODUCT SIZE</label>
+                    <input type="text" id="inw_size" class="form-control text-center" placeholder="e.g. 18 X 16">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label fw-bold text-white" style="font-size: 14px;">COLOUR (EXTENDED WIDTH)</label>
+                    <input type="text" id="inw_color" class="form-control text-center" placeholder="e.g. METALLIC BLACK NERA">
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label fw-bold text-white" style="font-size: 14px;">PRICE (₹)</label>
+                    <input type="number" id="inw_price" class="form-control text-center" value="0">
+                </div>
+            </div>
+
+            <div class="text-center mt-3">
+                <button class="btn btn-blue-heavy shadow-lg" onclick="saveInwardForm()"><i class="bi bi-hdd-network"></i> SAVE AND ADD ITEM IN STOCK</button>
             </div>
         </div>
     </div>
 
 </div>
+
 <script>
     function switchTab(panelId, element) {
         document.querySelectorAll('.tab-content-panel').forEach(p => p.classList.remove('active-panel'));
         document.querySelectorAll('.nav-link-custom').forEach(t => t.classList.remove('active-tab'));
         document.getElementById(panelId).classList.add('active-panel');
+        
         if (element && element.classList) {
             element.classList.add('active-tab');
-        } else if (element && element.length) {
-            element[1].classList.add('active-tab'); // Sets billing tab style active
         }
     }
 
@@ -242,7 +264,7 @@
                         body.appendChild(gap);
                     }
                     let headingRow = document.createElement('tr');
-                    headingRow.innerHTML = '<td colspan="6" class="product-group-header">🟨 ' + item.product_name.toUpperCase() + '</td>';
+                    headingRow.innerHTML = '<td colspan="6" class="product-group-header"><i class="bi bi-box-seam"></i> ' + item.product_name.toUpperCase() + '</td>';
                     body.appendChild(headingRow);
                     lastProduct = item.product_name;
                 }
@@ -253,11 +275,13 @@
                 let escapeName = item.product_name.replace(/'/g, "\\'");
                 let escapeSize = item.product_size.replace(/'/g, "\\'");
                 let escapeColor = item.colour.replace(/'/g, "\\'");
+                let itemSrNo = item.sr_no || '';
                 
                 row.innerHTML = `
-                    <td style="color: #94a3b8; vertical-align: middle;">${item.sr_no || ''}</td>
-                    <td class="text-start ps-4 text-bright-white" style="vertical-align: middle;">
-                        <button class="btn btn-sm btn-primary me-2" style="font-size:11px; padding:2px 8px; font-weight:bold;" onclick="sendToBillingForm('${escapeName}', '${escapeSize}', '${escapeColor}', ${item.price})">🛒 Bill</button>
+                    <td style="color: #94a3b8; vertical-align: middle;">${itemSrNo}</td>
+                    <td class="text-start ps-3 text-bright-white" style="vertical-align: middle;">
+                        <button class="btn btn-sm btn-primary me-1 fw-bold" style="font-size:11px; padding:2px 6px;" onclick="sendToBillingForm('${escapeName}', '${escapeSize}', '${escapeColor}', ${item.price})"><i class="bi bi-receipt"></i> Bill</button>
+                        <button class="btn btn-sm btn-success me-2 fw-bold" style="font-size:11px; padding:2px 6px;" onclick="sendToInwardForm('${itemSrNo}', '${escapeName}', '${escapeSize}', '${escapeColor}', ${item.price})"><i class="bi bi-box-arrow-in-down"></i> Inward</button>
                         ${item.product_name}
                     </td>
                     <td class="text-bright-size" style="vertical-align: middle;">${item.product_size}</td>
@@ -291,8 +315,20 @@
         targetRow.querySelector('.qty-input').value = 1;
         targetRow.querySelector('.discount-input').value = 0;
         
-        let billingTabBtn = document.querySelectorAll('.nav-link-custom');
-        switchTab('billing-desk', billingTabBtn);
+        let tabs = document.querySelectorAll('.nav-link-custom');
+        switchTab('billing-desk', tabs[1]);
+    }
+
+    function sendToInwardForm(srNo, name, size, colour, price) {
+        document.getElementById('inw_sr').value = srNo;
+        document.getElementById('inw_name').value = name;
+        document.getElementById('inw_size').value = size;
+        document.getElementById('inw_color').value = colour;
+        document.getElementById('inw_price').value = price;
+        document.getElementById('inw_qty').value = 1;
+        
+        let tabs = document.querySelectorAll('.nav-link-custom');
+        switchTab('inward-desk', tabs[2]);
     }
 
     function addNewBillRow() {
@@ -313,6 +349,16 @@
         }
     }
 
+    function removeLastBillRow() {
+        let tbody = document.getElementById('billItemsBody');
+        let rows = tbody.getElementsByClassName('bill-item-row');
+        if(rows.length > 1) {
+            tbody.removeChild(rows[rows.length - 1]);
+        } else {
+            alert("CANNOT DELETE SINGLE ROW!");
+        }
+    }
+
     function submitBillForm() {
         let items = [];
         let rows = document.getElementById('billItemsBody').rows;
@@ -330,13 +376,13 @@
             }
         }
         if(items.length === 0) {
-            alert("⚠️ Error: Kripya bill me kam se kam ek product zaroor bharein!");
+            alert("Error: PLEASE ENTER ONE ITEM NAME!");
             return;
         }
         let billData = {
             bill_no: document.getElementById('billNo').value,
             party_name: document.getElementById('partyName').value,
-            address: "Authorized Showroom Client",
+            address: document.getElementById('partyAddress').value || "Authorized Client",
             mobile_no: document.getElementById('mobileNo').value,
             bill_date: new Date().toLocaleDateString('en-IN'),
             advance_paid: document.getElementById('advancePaid').value || 0,
@@ -347,9 +393,9 @@
         .then(blob => {
             let url = window.URL.createObjectURL(blob);
             let a = document.createElement('a'); a.href = url; a.download = 'Invoice_' + billData.bill_no + '.pdf'; a.click();
-            alert("🎉 SUCCESS: Invoice generated successfully! Pure White background standard print out download ho chuka hai aur live stock perfectly deduct ho gaya hai.");
+            alert("SUCCESS: Invoice Bill PDF Saved!");
             location.reload();
-        }).catch(err => alert("⚠️ Error: " + err.message));
+        }).catch(err => alert("Error: " + err.message));
     }
 
     function saveInwardForm() {
@@ -361,6 +407,10 @@
             price: document.getElementById('inw_price').value,
             qty: document.getElementById('inw_qty').value
         };
+        if(!d.product_name) {
+            alert("PLEASE FILL ITEM NAME!");
+            return;
+        }
         fetch('/api/add_stock', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(d) })
         .then(res => res.json()).then(resData => {
             alert(resData.message);
@@ -369,7 +419,7 @@
                 document.getElementById('inw_size').value=''; document.getElementById('inw_color').value='';
                 document.getElementById('inw_price').value='0'; document.getElementById('inw_qty').value='1';
             }
-        }).catch(err => alert("⚠️ Inward server failure connection error"));
+        }).catch(err => alert("Inward server connection failure"));
     }
 </script>
 </body>
