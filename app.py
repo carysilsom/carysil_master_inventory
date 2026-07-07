@@ -425,9 +425,11 @@ def generate_pdf_invoice(bill_data):
     for item in items_list:
         qty = int(item.get('qty', item.get('qty_to_minus', 1)))
         rate = float(item.get('rate', item.get('price', 0)))
-        disc_input = str(item.get('discount', '0')).replace('%', '').strip()
-
+        
+        # --- FIXED ITEM-WISE DISCOUNT RECOGNITION LOGIC ---
+        disc_input = str(item.get('discount', '')).replace('%', '').strip()
         if not disc_input or disc_input == '0':
+            # Agar individual item par discount nahi hai tabhi global uthayega
             disc_input = str(bill_data.get('global_discount', '0')).replace('%', '').strip()
 
         gross_amount = qty * rate
@@ -544,6 +546,15 @@ def generate_bill():
         conn = get_db_connection()
         cursor = conn.cursor()
         
+        # === 🛡️ AUTO-CORRECTION DATABASE GUARD ENGINE 🛡️ ===
+        try:
+            cursor.execute("ALTER TABLE bill_history ADD COLUMN IF NOT EXISTS price NUMERIC(12,2);")
+            cursor.execute("ALTER TABLE bill_history ADD COLUMN IF NOT EXISTS billed_by VARCHAR(100);")
+            conn.commit()
+        except Exception as table_fix_err:
+            print(f"Table patch skip or auto-applied: {table_fix_err}")
+            conn.rollback()
+        
         items_list = bill_data.get('items', [])
         if not items_list and 'product_name' in bill_data:
             items_list = [bill_data]
@@ -583,10 +594,12 @@ def generate_bill():
             p_col = item.get('colour', '').strip()
             qty_needed = int(item.get('qty', item.get('qty_to_minus', 1)))
             rate = float(item.get('rate', item.get('price', 0)))
-            disc_input = str(item.get('discount', '0')).replace('%', '').strip()
-
+            
+            # --- FIXED ITEM-WISE DISCOUNT DB ENTRY LOGIC ---
+            disc_input = str(item.get('discount', '')).replace('%', '').strip()
             if not disc_input or disc_input == '0':
                 disc_input = str(bill_data.get('global_discount', '0')).replace('%', '').strip()
+                
             if not p_name: continue
             
             # Decrement Master Stock Live Engine

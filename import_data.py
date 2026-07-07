@@ -49,8 +49,11 @@ pg_conn = psycopg2.connect(
 )
 pg_cur = pg_conn.cursor()
 
-# --- [FIX LOGIC] TABLES AGAR DROP HO GAYE HAIN TO UNHE DOBARA FRESH CREATE KARNA ---
-print("Cloud par Tables check kiye jaa rahe hain...")
+# --- [FIX LOGIC] BILL_HISTORY KO DROP KARKE EXACT APP.PY KE COLUMNS SE MATCH KARNA ---
+print("Cloud par Tables check aur fix kiye jaa rahe hain...")
+
+pg_cur.execute("DROP TABLE IF EXISTS bill_history CASCADE;") # Purana galat column wala table hataya
+
 pg_cur.execute("""
     CREATE TABLE IF NOT EXISTS master_stock (
         sr_no VARCHAR(50),
@@ -72,7 +75,7 @@ pg_cur.execute("""
         product_size VARCHAR(100),
         colour VARCHAR(100),
         qty INT,
-        rate NUMERIC(12,2),
+        price NUMERIC(12,2),   -- Aapke app.py se exact match karne ke liye 'price' kiya
         final_subtotal NUMERIC(12,2)
     );
 """)

@@ -139,7 +139,7 @@
                 </div>
                 <div class="grid-col-custom" style="width: 30%;">
                     <label class="form-label-custom">Discount % (Global)</label>
-                    <input type="text" id="globalDiscount" class="form-control text-center" value="0" placeholder="e.g. 35-3">
+                    <input type="text" id="globalDiscount" class="form-control text-center" value="0" placeholder="e.g. 35-3" oninput="updateLiveTotal()">
                 </div>
             </div>
             
@@ -147,11 +147,12 @@
                 <table class="table table-bordered align-middle m-0" style="width: 100%;">
                     <thead class="table-dark text-center" style="background-color: #1f2937;">
                         <tr style="height: 48px; font-size: 15px;">
-                            <th style="width: 50%;">Particulars / Product Description (Exact Match)</th>
+                            <th style="width: 40%;">Particulars / Product Description (Exact Match)</th>
                             <th style="width: 13%;">Size</th>
                             <th style="width: 13%;">Colour</th>
-                            <th style="width: 11%;">Quantity</th>
-                            <th style="width: 13%;">Rate (₹)</th>
+                            <th style="width: 10%;">Quantity</th>
+                            <th style="width: 12%;">Discount %</th>
+                            <th style="width: 12%;">Rate (₹)</th>
                         </tr>
                     </thead>
                     <tbody id="billItemsBody">
@@ -159,8 +160,9 @@
                             <td><input type="text" class="form-control part-input" placeholder="Click 'Bill' from Search Desk"></td>
                             <td><input type="text" class="form-control size-input" placeholder="Size"></td>
                             <td><input type="text" class="form-control color-input" placeholder="Colour"></td>
-                            <td><input type="number" class="form-control qty-input text-center" value="1" min="1" style="text-align: center;"></td>
-                            <td><input type="number" class="form-control rate-input text-center" value="0" style="text-align: center;"></td>
+                            <td><input type="number" class="form-control qty-input text-center" value="1" min="1" style="text-align: center;" oninput="updateLiveTotal()"></td>
+                            <td><input type="text" class="form-control discount-input text-center" value="0" placeholder="e.g. 20" style="text-align: center;" oninput="updateLiveTotal()"></td>
+                            <td><input type="number" class="form-control rate-input text-center" value="0" style="text-align: center;" oninput="updateLiveTotal()"></td>
                         </tr>
                     </tbody>
                 </table>
@@ -172,8 +174,14 @@
                     <button class="btn btn-danger fw-bold" style="padding: 10px 24px; font-weight: 800; border: none; border-radius: 6px;" onclick="removeLastBillRow()"><i class="bi bi-trash"></i> Remove Row</button>
                 </div>
                 <div class="grid-col-custom" style="width: 35%;">
-                    <label class="form-label-custom" style="color: #ffffff;">ADVANCE PAID AMOUNT (₹)</label>
-                    <input type="number" id="advancePaid" class="form-control text-center fw-bold text-success" value="0" style="text-align: center;">
+                    <div style="margin-bottom: 15px;">
+                        <label class="form-label-custom" style="color: #f59e0b; font-weight: 900;">TOTAL AMOUNT AFTER DISCOUNT (₹)</label>
+                        <input type="text" id="liveTotalDisplay" class="form-control text-center fw-bold" readonly value="₹0.00" style="text-align: center; background-color: #000000 !important; color: #22c55e !important; border: 2px solid #22c55e; font-size: 20px !important;">
+                    </div>
+                    <div>
+                        <label class="form-label-custom" style="color: #ffffff;">ADVANCE PAID AMOUNT (₹)</label>
+                        <input type="number" id="advancePaid" class="form-control text-center fw-bold text-success" value="0" style="text-align: center;">
+                    </div>
                 </div>
             </div>
 
@@ -331,6 +339,50 @@
             if(panelId === 'bill-history-desk') links[3].classList.add('active-tab');
             if(panelId === 'inward-history-desk') links[4].classList.add('active-tab');
         }
+    }
+
+    // NEW LIVE TOTAL CALCULATION LOGIC
+    function calculateDoubleDiscountJS(grossAmount, discountStr) {
+        if (!discountStr || discountStr.trim() === "" || discountStr.trim() === "0") {
+            return grossAmount;
+        }
+        let cleanStr = discountStr.replace(/%/g, '').trim();
+        if (cleanStr.includes('-')) {
+            let discounts = cleanStr.split('-').map(d => parseFloat(d.trim())).filter(d => !isNaN(d));
+            let currentAmount = grossAmount;
+            discounts.forEach(d => {
+                currentAmount = currentAmount * (1 - (d / 100.0));
+            });
+            return currentAmount;
+        } else {
+            let dVal = parseFloat(cleanStr);
+            if (isNaN(dVal)) return grossAmount;
+            return grossAmount * (1 - (dVal / 100.0));
+        }
+    }
+
+    function updateLiveTotal() {
+        let rows = document.getElementById('billItemsBody').getElementsByClassName('bill-item-row');
+        let globalDisc = document.getElementById('globalDiscount').value || '0';
+        let grandTotal = 0;
+
+        for (let i = 0; i < rows.length; i++) {
+            let part = rows[i].querySelector('.part-input').value;
+            if (part && part.trim() !== "") {
+                let qty = parseInt(rows[i].querySelector('.qty-input').value) || 0;
+                let rate = parseFloat(rows[i].querySelector('.rate-input').value) || 0;
+                let itemDisc = rows[i].querySelector('.discount-input').value || '0';
+
+                if (itemDisc.trim() === '0' || itemDisc.trim() === '') {
+                    itemDisc = globalDisc;
+                }
+
+                let gross = qty * rate;
+                let net = calculateDoubleDiscountJS(gross, itemDisc);
+                grandTotal += net;
+            }
+        }
+        document.getElementById('liveTotalDisplay').value = '₹' + grandTotal.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     }
 
     // TALLY REGISTER DATA FETCH: BILLING HISTORY LOGIC
@@ -503,8 +555,10 @@
         targetRow.querySelector('.color-input').value = colour;
         targetRow.querySelector('.rate-input').value = price;
         targetRow.querySelector('.qty-input').value = 1;
+        targetRow.querySelector('.discount-input').value = '0';
         
         switchTab('billing-desk', null);
+        updateLiveTotal();
     }
 
     // === EKDAM FIXED AND AUTOMATIC INWARD FUNCTION ===
@@ -529,6 +583,8 @@
             for(let i=0; i<inputs.length; i++) {
                 if(inputs[i].className.includes('qty-input')) {
                     inputs[i].value = 1;
+                } else if(inputs[i].className.includes('discount-input')) {
+                    inputs[i].value = '0';
                 } else if(inputs[i].className.includes('rate-input')) {
                     inputs[i].value = 0;
                 } else {
@@ -537,6 +593,7 @@
             }
             tbody.appendChild(newRow);
         }
+        updateLiveTotal();
     }
 
     function removeLastBillRow() {
@@ -547,6 +604,7 @@
         } else {
             alert("CANNOT DELETE SINGLE ROW!");
         }
+        updateLiveTotal();
     }
 
     function submitBillForm() {
@@ -557,13 +615,17 @@
         for(let i=0; i<rows.length; i++) {
             let part = rows[i].querySelector('.part-input').value;
             if(part && part.trim() !== "") {
+                let rowDisc = rows[i].querySelector('.discount-input').value || '0';
+                if(rowDisc.trim() === '0' || rowDisc.trim() === '') {
+                    rowDisc = globDisc;
+                }
                 items.push({
                     particulars: part,
                     size: rows[i].querySelector('.size-input').value,
                     colour: rows[i].querySelector('.color-input').value,
                     qty: rows[i].querySelector('.qty-input').value,
                     rate: rows[i].querySelector('.rate-input').value,
-                    discount: globDisc
+                    discount: rowDisc
                 });
             }
         }
