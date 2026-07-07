@@ -507,8 +507,9 @@
         switchTab('billing-desk', null);
     }
 
+    // === EKDAM FIXED AND AUTOMATIC INWARD FUNCTION ===
     function sendToInwardForm(srNo, name, size, colour, price) {
-        document.getElementById('inw_sr').value = srNo;
+        document.getElementById('inw_sr').value = srNo || '';
         document.getElementById('inw_name').value = name;
         document.getElementById('inw_size').value = size;
         document.getElementById('inw_color').value = colour;
@@ -578,7 +579,7 @@
             party_name: document.getElementById('partyName').value,
             address: document.getElementById('partyAddress').value || "Authorized Client",
             mobile_no: document.getElementById('mobileNo').value,
-            bill_date: new Date().toISOString().split('T')[0], // Standard clean ISO format for DB operations
+            bill_date: new Date().toISOString().split('T')[0],
             bill_time: currentTimeStr,
             advance_paid: document.getElementById('advancePaid').value || 0,
             billed_by: document.getElementById('billedBy').value,

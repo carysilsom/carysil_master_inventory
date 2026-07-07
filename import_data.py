@@ -49,10 +49,50 @@ pg_conn = psycopg2.connect(
 )
 pg_cur = pg_conn.cursor()
 
+# --- [FIX LOGIC] TABLES AGAR DROP HO GAYE HAIN TO UNHE DOBARA FRESH CREATE KARNA ---
+print("Cloud par Tables check kiye jaa rahe hain...")
+pg_cur.execute("""
+    CREATE TABLE IF NOT EXISTS master_stock (
+        sr_no VARCHAR(50),
+        product_name VARCHAR(255),
+        product_size VARCHAR(100),
+        colour VARCHAR(100),
+        price NUMERIC(12,2),
+        quantity INT
+    );
+""")
+
+pg_cur.execute("""
+    CREATE TABLE IF NOT EXISTS bill_history (
+        id SERIAL PRIMARY KEY,
+        bill_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        bill_no VARCHAR(50),
+        customer_name VARCHAR(255),
+        product_name VARCHAR(255),
+        product_size VARCHAR(100),
+        colour VARCHAR(100),
+        qty INT,
+        rate NUMERIC(12,2),
+        final_subtotal NUMERIC(12,2)
+    );
+""")
+
+pg_cur.execute("""
+    CREATE TABLE IF NOT EXISTS inward_history (
+        id SERIAL PRIMARY KEY,
+        inward_date DATE DEFAULT CURRENT_DATE,
+        sr_no VARCHAR(50),
+        product_name VARCHAR(255),
+        product_size VARCHAR(100),
+        colour VARCHAR(100),
+        price NUMERIC(12,2),
+        qty_added INT
+    );
+""")
+pg_conn.commit()
+
 # Purana data clear karna
 pg_cur.execute("TRUNCATE TABLE master_stock RESTART IDENTITY CASCADE;")
-pg_cur.execute("TRUNCATE TABLE bills RESTART IDENTITY CASCADE;")
-pg_cur.execute("TRUNCATE TABLE bill_items RESTART IDENTITY CASCADE;")
 pg_conn.commit()
 
 

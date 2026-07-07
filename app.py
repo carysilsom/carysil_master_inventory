@@ -157,20 +157,41 @@ def stock_inward():
             );
         """)
 
+# === [EKDAM PERFECT MATCH LOGIC: SARE 5 COLUMNS MATCH HONGE] ===
+        # Ab ye check karega ki exact wahi Sr.No, Name, Size, Colour aur Price wala maal pehle se hai ya nahi
         cursor.execute("""
             SELECT sr_no FROM master_stock 
-            WHERE UPPER(TRIM(product_name)) = %s AND UPPER(TRIM(product_size)) = %s AND UPPER(TRIM(colour)) = %s
-        """, (p_name, p_size, p_col))
+            WHERE sr_no = %s 
+              AND UPPER(TRIM(product_name)) = %s 
+              AND UPPER(TRIM(product_size)) = %s 
+              AND UPPER(TRIM(colour)) = %s 
+              AND price = %s
+        """, (sr_no, p_name, p_size, p_col, price))
+        
         row = cursor.fetchone()
         
         assigned_sr = ""
         if row:
-            cursor.execute("UPDATE master_stock SET quantity = quantity + %s, price = %s WHERE sr_no = %s", (qty, price, row[0]))
+            # EKDAM SAFE UPDATE: Sirf aur sirf usi ek bande ka stock badhega jiska SAAB KUCH match karega
+            cursor.execute("""
+                UPDATE master_stock 
+                SET quantity = quantity + %s 
+                WHERE sr_no = %s 
+                  AND UPPER(TRIM(product_name)) = %s 
+                  AND UPPER(TRIM(product_size)) = %s 
+                  AND UPPER(TRIM(colour)) = %s 
+                  AND price = %s
+            """, (qty, sr_no, p_name, p_size, p_col, price))
             assigned_sr = str(row[0])
         else:
-            cursor.execute("INSERT INTO master_stock (product_name, product_size, colour, price, quantity) VALUES (%s, %s, %s, %s, %s) RETURNING sr_no", (p_name, p_size, p_col, price, qty))
+            # INSERT QUERY FIX: Agar naya item hai toh usme Sr.No bhi sahi se jayega
+            cursor.execute("""
+                INSERT INTO master_stock (sr_no, product_name, product_size, colour, price, quantity) 
+                VALUES (%s, %s, %s, %s, %s, %s) RETURNING sr_no
+            """, (sr_no, p_name, p_size, p_col, price, qty))
             assigned_sr = str(cursor.fetchone()[0])
 
+        # History table me entry ekdam sahi record hogi
         cursor.execute("""
             INSERT INTO inward_history (inward_date, sr_no, product_name, product_size, colour, price, qty_added)
             VALUES (CURRENT_DATE, %s, %s, %s, %s, %s, %s)
@@ -318,10 +339,13 @@ def generate_pdf_invoice(bill_data):
     c.drawString(LEFT + 38 * mm, y - 7 * mm, str(bill_data.get('customer_name', bill_data.get('party_name', ''))).upper())
     c.drawString(LEFT + 38 * mm, y - 14 * mm, str(bill_data.get('mobile', bill_data.get('mobile_no', ''))))
     
+    # === SMART ADDRESS WRAPPING FOR LINE BREAKS ===
     address_str = str(bill_data.get('customer_address', bill_data.get('address', ''))).upper()
     if len(address_str) > 42:
-        c.drawString(LEFT + 38 * mm, y - 21 * mm, address_str[:42])
-        c.drawString(LEFT + 38 * mm, y - 26.5 * mm, address_str[42:])
+        space_idx = address_str.rfind(" ", 0, 43)
+        split_pt = space_idx if space_idx > 25 else 42
+        c.drawString(LEFT + 38 * mm, y - 21 * mm, address_str[:split_pt].strip())
+        c.drawString(LEFT + 38 * mm, y - 26.5 * mm, address_str[split_pt:].strip())
     else:
         c.drawString(LEFT + 38 * mm, y - 21 * mm, address_str)
 
@@ -361,8 +385,8 @@ def generate_pdf_invoice(bill_data):
     y -= (box_height + 12.7 * mm)
     header_height = 10 * mm
     
-    widths = [12*mm, 66*mm, 20*mm, 24*mm, 12*mm, 20*mm, 14*mm, 26*mm] 
-    widths[-1] = RIGHT - (LEFT + sum(widths[:-1])) 
+    # === RE-BUDGETED PERFECT WIDTHS FOR SIZE & COLOUR EXPANSION ===
+    widths = [10*mm, 56*mm, 26*mm, 32*mm, 12*mm, 20*mm, 12*mm, 22*mm] 
 
     COLS = [
         ("Sr.\nNo", widths[0]), ("Particulars Description", widths[1]),
@@ -425,22 +449,34 @@ def generate_pdf_invoice(bill_data):
             c.rect(x_start, y - row_height, w, row_height, stroke=1, fill=1)
             c.setFillColor(DARK)
             
-            if idx == 1:
-                if len(val) > 28:
-                    c.drawString(x_start + 2 * mm, y - 4.5 * mm, val[:28])
-                    c.drawString(x_start + 2 * mm, y - 9.0 * mm, val[28:])
+            # === SMART TEXT WRAPPING BY WORD AND SPACES ===
+            if idx == 1: # Particulars Description
+                if len(val) > 25:
+                    space_idx = val.rfind(" ", 0, 26)
+                    split_pt = space_idx if space_idx > 10 else 25
+                    c.drawString(x_start + 2 * mm, y - 4.5 * mm, val[:split_pt].strip())
+                    c.drawString(x_start + 2 * mm, y - 9.0 * mm, val[split_pt:].strip())
                 else:
                     c.drawString(x_start + 2 * mm, y - 7.0 * mm, val)
-            elif idx == 2:
-                if len(val) > 9:
-                    c.drawCentredString(x_start + w / 2, y - 4.5 * mm, val[:9])
-                    c.drawCentredString(x_start + w / 2, y - 9.0 * mm, val[9:])
+                    
+            elif idx == 2: # Size
+                if len(val) > 13:
+                    space_idx = val.rfind(" ", 0, 14)
+                    split_pt = space_idx if space_idx > 4 else 12
+                    c.drawCentredString(x_start + w / 2, y - 4.5 * mm, val[:split_pt].strip())
+                    c.drawCentredString(x_start + w / 2, y - 9.0 * mm, val[split_pt:].strip())
                 else:
                     c.drawCentredString(x_start + w / 2, y - 7.0 * mm, val)
-            elif idx == 3:
-                if len(val) > 11:
-                    c.drawCentredString(x_start + w / 2, y - 4.5 * mm, val[:11])
-                    c.drawCentredString(x_start + w / 2, y - 9.0 * mm, val[11:])
+                    
+            elif idx == 3: # Colour
+                if len(val) > 14:
+                    # Clear cut split check if bracket exists like (PREMIUM)
+                    split_pt = val.find(" (")
+                    if split_pt == -1 or split_pt > 14 or split_pt < 5:
+                        space_idx = val.rfind(" ", 0, 15)
+                        split_pt = space_idx if space_idx > 5 else 14
+                    c.drawCentredString(x_start + w / 2, y - 4.5 * mm, val[:split_pt].strip())
+                    c.drawCentredString(x_start + w / 2, y - 9.0 * mm, val[split_pt:].strip())
                 else:
                     c.drawCentredString(x_start + w / 2, y - 7.0 * mm, val)
             else:
@@ -499,7 +535,6 @@ def generate_pdf_invoice(bill_data):
     pdf_out = buffer.getvalue()
     buffer.close()
     return pdf_out
-
 
 @app.route('/api/generate_bill', methods=['POST'])
 def generate_bill():
