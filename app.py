@@ -364,7 +364,7 @@ def generate_pdf_invoice(bill_data):
 
     right_x = LEFT + left_width
     right_width = RIGHT - right_x
-    c.rect(right_x, y - box_height, right_width, stroke=1, fill=0)
+    c.rect(right_x, y - box_height, right_width, box_height, fill=0, stroke=1)
     
     try:
         c.setFont("Helvetica-BoldOblique", 10)
