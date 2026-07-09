@@ -4,3 +4,4 @@ openpyxl
 reportlab
 gunicorn
 psycopg2-binary
+pytz

@@ -3,6 +3,7 @@ import psycopg2
 from psycopg2.extras import RealDictCursor
 import os
 from datetime import datetime
+import pytz
 from io import BytesIO
 import threading  # Sync control ke liye
 
@@ -339,19 +340,31 @@ def generate_pdf_invoice(bill_data):
     c.drawString(LEFT + 38 * mm, y - 7 * mm, str(bill_data.get('customer_name', bill_data.get('party_name', ''))).upper())
     c.drawString(LEFT + 38 * mm, y - 14 * mm, str(bill_data.get('mobile', bill_data.get('mobile_no', ''))))
     
-    # === SMART ADDRESS WRAPPING FOR LINE BREAKS ===
-    address_str = str(bill_data.get('customer_address', bill_data.get('address', ''))).upper()
-    if len(address_str) > 42:
-        space_idx = address_str.rfind(" ", 0, 43)
-        split_pt = space_idx if space_idx > 25 else 42
-        c.drawString(LEFT + 38 * mm, y - 21 * mm, address_str[:split_pt].strip())
-        c.drawString(LEFT + 38 * mm, y - 26.5 * mm, address_str[split_pt:].strip())
-    else:
-        c.drawString(LEFT + 38 * mm, y - 21 * mm, address_str)
+    # === 🛡️ HIGH-PREMIUM UNLIMITED ADDRESS WRAPPING ENGINE 🛡️ ===
+    address_str = str(bill_data.get('customer_address', bill_data.get('address', ''))).upper().strip()
+    words = address_str.split(" ")
+    lines = []
+    current_line = ""
+    
+    for word in words:
+        if len(current_line + " " + word) <= 42:
+            current_line = (current_line + " " + word).strip()
+        else:
+            lines.append(current_line)
+            current_line = word
+    if current_line:
+        lines.append(current_line)
+        
+    addr_y = y - 21 * mm
+    for idx, line_text in enumerate(lines):
+        if idx > 0:
+            addr_y -= 4.2 * mm  # Do lines ke beech ka uniform spacing gap
+        if addr_y > (y - box_height + 2 * mm):
+            c.drawString(LEFT + 38 * mm, addr_y, line_text)
 
     right_x = LEFT + left_width
     right_width = RIGHT - right_x
-    c.rect(right_x, y - box_height, right_width, box_height, fill=0, stroke=1)
+    c.rect(right_x, y - box_height, right_width, stroke=1, fill=0)
     
     try:
         c.setFont("Helvetica-BoldOblique", 10)
@@ -362,6 +375,10 @@ def generate_pdf_invoice(bill_data):
     c.drawString(right_x + 4 * mm, y - 14 * mm, "DATE :")
     c.drawString(right_x + 4 * mm, y - 21 * mm, "TIME :")
     
+    # === ⏰ INDIAN STANDARD TIME (IST) CORE IMPLEMENTATION ⏰ ===
+    IST = pytz.timezone('Asia/Kolkata')
+    india_time = datetime.now(IST)
+    
     raw_date = str(bill_data.get('date', bill_data.get('bill_date', '')))
     formatted_date = raw_date
     if len(raw_date) == 10 and raw_date[4] == '-' and raw_date[7] == '-':
@@ -370,8 +387,10 @@ def generate_pdf_invoice(bill_data):
             formatted_date = f"{parts[2]}-{parts[1]}-{parts[0]}"
         except:
             formatted_date = raw_date
+    if not raw_date:
+        formatted_date = india_time.strftime("%d-%m-%Y")
 
-    current_time = datetime.now().strftime('%I:%M %p')
+    current_time = bill_data.get('bill_time', india_time.strftime('%I:%M %p'))
     
     try:
         c.setFont("Helvetica-BoldOblique", 8.5)
@@ -385,7 +404,6 @@ def generate_pdf_invoice(bill_data):
     y -= (box_height + 12.7 * mm)
     header_height = 10 * mm
     
-    # === RE-BUDGETED PERFECT WIDTHS FOR SIZE & COLOUR EXPANSION ===
     widths = [10*mm, 56*mm, 26*mm, 32*mm, 12*mm, 20*mm, 12*mm, 22*mm] 
 
     COLS = [
@@ -426,10 +444,8 @@ def generate_pdf_invoice(bill_data):
         qty = int(item.get('qty', item.get('qty_to_minus', 1)))
         rate = float(item.get('rate', item.get('price', 0)))
         
-        # --- FIXED ITEM-WISE DISCOUNT RECOGNITION LOGIC ---
         disc_input = str(item.get('discount', '')).replace('%', '').strip()
         if not disc_input or disc_input == '0':
-            # Agar individual item par discount nahi hai tabhi global uthayega
             disc_input = str(bill_data.get('global_discount', '0')).replace('%', '').strip()
 
         gross_amount = qty * rate
@@ -451,8 +467,7 @@ def generate_pdf_invoice(bill_data):
             c.rect(x_start, y - row_height, w, row_height, stroke=1, fill=1)
             c.setFillColor(DARK)
             
-            # === SMART TEXT WRAPPING BY WORD AND SPACES ===
-            if idx == 1: # Particulars Description
+            if idx == 1: 
                 if len(val) > 25:
                     space_idx = val.rfind(" ", 0, 26)
                     split_pt = space_idx if space_idx > 10 else 25
@@ -461,7 +476,7 @@ def generate_pdf_invoice(bill_data):
                 else:
                     c.drawString(x_start + 2 * mm, y - 7.0 * mm, val)
                     
-            elif idx == 2: # Size
+            elif idx == 2: 
                 if len(val) > 13:
                     space_idx = val.rfind(" ", 0, 14)
                     split_pt = space_idx if space_idx > 4 else 12
@@ -470,9 +485,8 @@ def generate_pdf_invoice(bill_data):
                 else:
                     c.drawCentredString(x_start + w / 2, y - 7.0 * mm, val)
                     
-            elif idx == 3: # Colour
+            elif idx == 3: 
                 if len(val) > 14:
-                    # Clear cut split check if bracket exists like (PREMIUM)
                     split_pt = val.find(" (")
                     if split_pt == -1 or split_pt > 14 or split_pt < 5:
                         space_idx = val.rfind(" ", 0, 15)
@@ -546,7 +560,6 @@ def generate_bill():
         conn = get_db_connection()
         cursor = conn.cursor()
         
-        # === 🛡️ AUTO-CORRECTION DATABASE GUARD ENGINE 🛡️ ===
         try:
             cursor.execute("ALTER TABLE bill_history ADD COLUMN IF NOT EXISTS price NUMERIC(12,2);")
             cursor.execute("ALTER TABLE bill_history ADD COLUMN IF NOT EXISTS billed_by VARCHAR(100);")
@@ -559,7 +572,6 @@ def generate_bill():
         if not items_list and 'product_name' in bill_data:
             items_list = [bill_data]
 
-        # 1. LIVE INVENTORY ATOMIC SAFETY CHECK
         for item in items_list:
             p_name = item.get('product_name', item.get('particulars', '')).strip()
             p_size = item.get('size', item.get('product_size', '')).strip()
@@ -577,16 +589,19 @@ def generate_bill():
             if row and row[0] < qty_needed:
                 return jsonify({"status": "error", "message": f"Stock Alert! Only {row[0]} left for '{p_name}'."}), 400
 
-        # 2. RUN TRANSACTION: Subtract Ledger & Save to Bill History File
         customer_name = bill_data.get('customer_name', bill_data.get('party_name', ''))
         customer_address = bill_data.get('customer_address', bill_data.get('address', ''))
         mobile_no = bill_data.get('mobile', bill_data.get('mobile_no', ''))
         bill_no = bill_data.get('bill_no')
-        billed_by = bill_data.get('generated_by', 'PUNEET YADAV')
+        billed_by = bill_data.get('billed_by', bill_data.get('generated_by', 'PUNEET YADAV'))
+        
+        # === DATABASE SIDE TIMEZONE CORRECTION ===
+        IST = pytz.timezone('Asia/Kolkata')
+        india_time = datetime.now(IST)
         
         bill_date_str = bill_data.get('date', bill_data.get('bill_date', ''))
         if not bill_date_str:
-            bill_date_str = datetime.now().strftime("%Y-%m-%d")
+            bill_date_str = india_time.strftime("%Y-%m-%d")
 
         for item in items_list:
             p_name = item.get('product_name', item.get('particulars', '')).strip()
@@ -595,14 +610,12 @@ def generate_bill():
             qty_needed = int(item.get('qty', item.get('qty_to_minus', 1)))
             rate = float(item.get('rate', item.get('price', 0)))
             
-            # --- FIXED ITEM-WISE DISCOUNT DB ENTRY LOGIC ---
             disc_input = str(item.get('discount', '')).replace('%', '').strip()
             if not disc_input or disc_input == '0':
                 disc_input = str(bill_data.get('global_discount', '0')).replace('%', '').strip()
                 
             if not p_name: continue
             
-            # Decrement Master Stock Live Engine
             cursor.execute("""
                 UPDATE master_stock SET quantity = quantity - %s 
                 WHERE UPPER(TRIM(product_name)) = UPPER(TRIM(%s)) 
@@ -613,34 +626,29 @@ def generate_bill():
             gross_amount = qty_needed * rate
             net_amount = calculate_double_discount(gross_amount, disc_input)
             
-            # Permanent Cloud Storage Entry
             cursor.execute("""
                 INSERT INTO bill_history (bill_no, bill_date, customer_name, product_name, product_size, colour, price, qty, final_subtotal, billed_by)
                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
             """, (bill_no, bill_date_str, customer_name, p_name, p_size, p_col, rate, qty_needed, net_amount, billed_by))
             
         conn.commit()
+        
+        # Pura structured data pass karenge invoice engine ko
+        bill_data['bill_time'] = india_time.strftime('%I:%M %p')
+        pdf_data = generate_pdf_invoice(bill_data)
+        
         cursor.close()
         conn.close()
         
         # Bill kat-te hi safe thread mein background mein RAM memory cache ko refresh karna
         threading.Thread(target=refresh_stock_cache).start()
         
+        # Returning the calculated stream file object safely
+        return send_file(BytesIO(pdf_data), mimetype='application/pdf', as_attachment=True, download_name=f"Invoice_{bill_no}.pdf")
+        
     except Exception as e:
         if conn: conn.rollback()
         return jsonify({"status": "error", "message": f"Database Operation Error: {str(e)}"}), 500
-    
-    # 3. STREAM DELIVERY PIPELINE
-    try:
-        pdf_file_data = generate_pdf_invoice(bill_data)
-        return send_file(
-            BytesIO(pdf_file_data),
-            mimetype='application/pdf',
-            as_attachment=True,
-            download_name=f"Invoice_{bill_no}.pdf"
-        )
-    except Exception as pdf_error:
-        return jsonify({"status": "error", "message": f"PDF Compilation Error: {str(pdf_error)}"}), 500
 
 # App start hote hi pehli baar automatic cloud se sara data RAM memory cache mein kheench lega
 with app.app_context():
