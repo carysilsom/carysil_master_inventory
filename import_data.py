@@ -154,7 +154,7 @@ else:
 pg_conn.commit()
 
 print("\n==============================")
-print("SUCCESS - Aapka poora data 1189 tak ekdam safely cloud par sync ho gaya!")
+print("SUCCESS - Aapka poora data 1200 tak ekdam safely cloud par sync ho gaya!")
 print("==============================")
 
 sqlite_conn.close()

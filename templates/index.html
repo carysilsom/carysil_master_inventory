@@ -11,12 +11,77 @@
         body { background-color: #0b0f19; font-family: 'Segoe UI', Arial, sans-serif; color: #f8fafc; }
         .software-header { background: linear-gradient(135deg, #111827, #1f2937); color: #ffffff; padding: 25px; font-weight: 800; letter-spacing: 1px; border-bottom: 4px solid #dc2626; text-shadow: 2px 2px 5px rgba(0,0,0,0.7); }
         
-        /* Navigation Tabs Look */
-        .nav-menu { background: #111827; padding: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.5); margin-bottom: 35px; display: flex; justify-content: center; border-radius: 0 0 15px 15px; border-bottom: 1px solid #374151; flex-wrap: wrap; }
-        .nav-link-custom { padding: 15px 25px; color: #9ca3af; font-weight: 800; text-decoration: none; cursor: pointer; transition: all 0.3s ease; border-radius: 8px; margin: 5px; font-size: 14px; letter-spacing: 1px; }
-        .nav-link-custom:hover { background: rgba(255,255,255,0.05); color: #fff; }
-        .nav-link-custom.active-tab { color: #ffffff; background-color: #dc2626; box-shadow: 0 4px 15px rgba(220, 38, 38, 0.4); }
+        /* ==========================================================================
+           NEW LOOK: ULTRA-MODERN 3D NAVIGATION MENU & YELLOW GLOW STYLES
+           ========================================================================== */
+        .nav-menu { 
+            background: #111827; 
+            padding: 12px; 
+            box-shadow: 0 8px 32px rgba(0,0,0,0.7); 
+            margin-bottom: 35px; 
+            display: flex; 
+            justify-content: center; 
+            border-radius: 0 0 20px 20px; 
+            border-bottom: 2px solid #1f2937; 
+            flex-wrap: wrap; 
+            gap: 15px;
+        }
         
+        .nav-link-custom { 
+            padding: 14px 28px; 
+            color: #9ca3af; 
+            font-weight: 800; 
+            text-decoration: none; 
+            cursor: pointer; 
+            font-size: 14px; 
+            letter-spacing: 1px; 
+            border-radius: 12px;
+            background: linear-gradient(135deg, #1f2937, #111827);
+            border: 1px solid #374151;
+            /* Heavy 3D Bottom Edge */
+            border-bottom: 5px solid #030712 !important; 
+            position: relative; 
+            top: 0; 
+            transition: all 0.10s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 6px 10px rgba(0,0,0,0.4);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        /* Hover Effect */
+        .nav-link-custom:hover { 
+            background: linear-gradient(135deg, #374151, #1f2937); 
+            color: #ffffff;
+            border-color: #4b5563;
+        }
+        
+        /* Real Physical Click / Press Animation Feeling */
+        .nav-link-custom:active { 
+            top: 4px !important; 
+            border-bottom: 1px solid #f59e0b !important; 
+            box-shadow: 0 0 25px #f59e0b, inset 0 2px 5px rgba(0,0,0,0.5) !important;
+            color: #f59e0b !important;
+        }
+        
+        /* Active Tab Highlight Look */
+        .nav-link-custom.active-tab { 
+            color: #ffffff; 
+            background: linear-gradient(135deg, #dc2626, #991b1b); 
+            border-color: #ef4444;
+            border-bottom: 5px solid #7f1d1d !important; 
+            box-shadow: 0 4px 15px rgba(220, 38, 38, 0.4); 
+        }
+
+        /* Active Tab par click karne par bhi yellow glow feel aayegi */
+        .nav-link-custom.active-tab:active {
+            border-bottom: 1px solid #f59e0b !important;
+            box-shadow: 0 0 25px #f59e0b !important;
+            background: linear-gradient(135deg, #f59e0b, #b45309);
+            color: #000000 !important;
+        }
+        /* ========================================================================== */
+
         .tab-content-panel { display: none; background: #111827; border-radius: 12px; padding: 30px; box-shadow: 0 15px 35px rgba(0,0,0,0.6); border: 1px solid #1f2937; }
         .tab-content-panel.active-panel { display: block; }
 
@@ -51,20 +116,35 @@
         .form-control { background-color: #0b0f19 !important; border: 2px solid #374151 !important; color: #ffffff !important; font-weight: 700; padding: 12px 18px !important; font-size: 16px !important; border-radius: 8px !important; width: 100%; box-sizing: border-box; }
         .form-control:focus { box-shadow: 0 0 12px rgba(220, 38, 38, 0.4) !important; border-color: #dc2626 !important; background-color: #111827 !important; }
         .bill-card, .inward-card { background: #111827; border: 1px solid #1f2937; border-radius: 12px; }
-        .btn-blue-custom { background: linear-gradient(135deg, #3b82f6, #1d4ed8) !important; color: white !important; font-weight: 800; border: none; padding: 10px 24px; border-radius: 6px; }
-        .btn-green-heavy { background: linear-gradient(135deg, #22c55e, #15803d) !important; color: white !important; font-weight: 800; font-size: 18px; border: none; padding: 15px 40px; border-radius: 8px; width: 100%; box-shadow: 0 5px 15px rgba(34, 197, 94, 0.3); letter-spacing: 1px; }
-        .btn-blue-heavy { background: linear-gradient(135deg, #3b82f6, #1d4ed8) !important; color: white !important; font-weight: 800; font-size: 18px; border: none; padding: 15px 40px; border-radius: 8px; width: 100%; box-shadow: 0 5px 15px rgba(59, 130, 246, 0.3); letter-spacing: 1px; }
         
+        /* Other Buttons 3D Style with Yellow Glow Feature */
+        .btn-blue-custom { background: linear-gradient(135deg, #3b82f6, #1d4ed8) !important; color: white !important; font-weight: 800; border: none; padding: 10px 24px; border-radius: 6px; border-bottom: 4px solid #1e40af !important; position: relative; top: 0; transition: all 0.1s ease; }
+        .btn-blue-custom:active { top: 3px; border-bottom: 1px solid #f59e0b !important; box-shadow: 0 0 15px #f59e0b !important; }
+        
+        .btn-danger-custom { background: linear-gradient(135deg, #ef4444, #b91c1c) !important; color: white !important; padding: 10px 24px; font-weight: 800; border: none; border-radius: 6px; border-bottom: 4px solid #7f1d1d !important; position: relative; top: 0; transition: all 0.1s ease; }
+        .btn-danger-custom:active { top: 3px; border-bottom: 1px solid #f59e0b !important; box-shadow: 0 0 15px #f59e0b !important; }
+
+        .btn-green-heavy { background: linear-gradient(135deg, #22c55e, #15803d) !important; color: white !important; font-weight: 800; font-size: 18px; border: none; padding: 15px 40px; border-radius: 8px; width: 100%; box-shadow: 0 5px 15px rgba(34, 197, 94, 0.3); border-bottom: 5px solid #166534 !important; position: relative; top: 0; transition: all 0.1s ease; letter-spacing: 1px; }
+        .btn-green-heavy:active { top: 4px; border-bottom: 1px solid #f59e0b !important; box-shadow: 0 0 20px #f59e0b !important; }
+
+        .btn-blue-heavy { background: linear-gradient(135deg, #3b82f6, #1d4ed8) !important; color: white !important; font-weight: 800; font-size: 18px; border: none; padding: 15px 40px; border-radius: 8px; width: 100%; box-shadow: 0 5px 15px rgba(59, 130, 246, 0.3); border-bottom: 5px solid #1e40af !important; position: relative; top: 0; transition: all 0.1s ease; letter-spacing: 1px; }
+        .btn-blue-heavy:active { top: 4px; border-bottom: 1px solid #f59e0b !important; box-shadow: 0 0 20px #f59e0b !important; }
+        
+        .btn-secondary-custom { background: linear-gradient(135deg, #6b7280, #374151) !important; color: white !important; font-weight: 800; padding: 10px 20px; border: none; border-radius: 6px; border-bottom: 4px solid #1f2937 !important; position: relative; top: 0; transition: all 0.1s ease; }
+        .btn-secondary-custom:active { top: 3px; border-bottom: 1px solid #f59e0b !important; box-shadow: 0 0 15px #f59e0b !important; }
+
         .form-label-custom { font-weight: bold; color: #eab308; font-size: 15px; margin-bottom: 8px; display: block; }
 
-        /* TALLY BOOK BRAND STYLES */
-        .tally-total-banner { background: #000000; border: 2px solid #22c55e; border-radius: 8px; padding: 15px; font-size: 22px; font-weight: 900; color: #22c55e; letter-spacing: 1px; margin-bottom: 25px; box-shadow: 0 0 15px rgba(34, 197, 94, 0.2); }
-        .tally-table { background-color: #000000 !important; font-family: 'Courier New', Courier, monospace; }
+        /* FIXED FONT TO ARIAL FOR SUMMARY REGISTERS */
+        .tally-total-banner { background: #000000; border: 2px solid #22c55e; border-radius: 8px; padding: 15px; font-size: 22px; font-weight: 900; color: #22c55e; letter-spacing: 1px; margin-bottom: 25px; box-shadow: 0 0 15px rgba(34, 197, 94, 0.2); font-family: Arial, Helvetica, sans-serif; }
+        .tally-table { background-color: #000000 !important; font-family: Arial, Helvetica, sans-serif; }
         .tally-table th { background: #1f2937 !important; color: #f59e0b !important; font-weight: bold; font-size: 14px; text-transform: uppercase; border: 1px solid #374151 !important; text-align: center; }
         .tally-table td { color: #ffffff !important; font-weight: bold; font-size: 14px; border: 1px solid #1f2937 !important; padding: 12px 10px !important; }
         
-        /* DATE FILTER MASTER BAR CONTROL */
-        .master-date-filter-box { background: #111827; border: 2px dashed #374151; padding: 15px 20px; border-radius: 10px; margin-bottom: 25px; display: flex; align-items: center; justify-content: flex-start; gap: 15px; }
+        .summary-item-line { display: block; border-bottom: 1px dashed #222; padding: 4px 0; text-align: left; }
+        .summary-item-line:last-child { border-bottom: none; }
+
+        .master-date-filter-box { background: #111827; border: 2px dashed #374151; padding: 15px 20px; border-radius: 10px; margin-bottom: 25px; display: flex; align-items: center; justify-content: flex-start; gap: 15px; font-family: Arial, Helvetica, sans-serif; }
     </style>
 </head>
 <body>
@@ -76,10 +156,10 @@
 <div class="container mt-2" style="max-width: 1200px; margin: 0 auto; padding: 0 15px;">
     <div class="nav-menu">
         <div class="nav-link-custom active-tab" onclick="switchTab('search-desk', this)"><i class="bi bi-search"></i> SEARCH DESK</div>
-        <div class="nav-link-custom" onclick="switchTab('billing-desk', this)"><i class="bi bi-receipt text-warning"></i> BILLING DESK</div>
-        <div class="nav-link-custom" onclick="switchTab('inward-desk', this)"><i class="bi bi-box-arrow-in-down text-success"></i> INWARD ENTRY</div>
-        <div class="nav-link-custom" onclick="switchTab('bill-history-desk', this); loadBillingHistory();"><i class="bi bi-journal-text text-danger"></i> DAILY SALES SUMMARY</div>
-        <div class="nav-link-custom" onclick="switchTab('inward-history-desk', this); loadInwardHistory();"><i class="bi bi-journal-check text-info"></i> INWARD STOCK SUMMARY</div>
+        <div class="nav-link-custom" onclick="switchTab('billing-desk', this)"><i class="bi bi-receipt"></i> BILLING DESK</div>
+        <div class="nav-link-custom" onclick="switchTab('inward-desk', this)"><i class="bi bi-box-arrow-in-down"></i> INWARD ENTRY</div>
+        <div class="nav-link-custom" onclick="switchTab('bill-history-desk', this); loadBillingHistory();"><i class="bi bi-journal-text"></i> DAILY SALES SUMMARY</div>
+        <div class="nav-link-custom" onclick="switchTab('inward-history-desk', this); loadInwardHistory();"><i class="bi bi-journal-check"></i> INWARD STOCK SUMMARY</div>
     </div>
 </div>
 
@@ -171,7 +251,7 @@
             <div class="grid-row-custom" style="margin-bottom: 25px;">
                 <div class="grid-col-custom" style="width: 65%;">
                     <button class="btn btn-blue-custom me-2" onclick="addNewBillRow()"><i class="bi bi-plus-circle"></i> Add Row</button>
-                    <button class="btn btn-danger fw-bold" style="padding: 10px 24px; font-weight: 800; border: none; border-radius: 6px;" onclick="removeLastBillRow()"><i class="bi bi-trash"></i> Remove Row</button>
+                    <button class="btn btn-danger-custom" onclick="removeLastBillRow()"><i class="bi bi-trash"></i> Remove Row</button>
                 </div>
                 <div class="grid-col-custom" style="width: 35%;">
                     <div style="margin-bottom: 15px;">
@@ -247,27 +327,26 @@
             <label for="bill_filter_date" style="font-weight: 800; color: #f59e0b;"><i class="bi bi-calendar3"></i> VIEW DATE REGISTER:</label>
             <input type="date" id="bill_filter_date" class="form-control" style="width: 220px; display: inline-block;">
             <button class="btn btn-blue-custom fw-bold" onclick="loadBillingHistory()"><i class="bi bi-search"></i> Check Summary</button>
-            <button class="btn btn-secondary fw-bold" style="padding: 10px 20px;" onclick="resetBillDateToToday()"><i class="bi bi-brightness-high"></i> Today</button>
+            <button class="btn btn-secondary-custom" onclick="resetBillDateToToday()"><i class="bi bi-brightness-high"></i> Today</button>
         </div>
 
         <div class="tally-total-banner text-center">
             <i class="bi bi-currency-rupee"></i> <span id="total_sale_header_title">SELECTED DATE</span> TOTAL SELLING AMOUNT: <span id="todaySellingTotal">₹0.00</span>
         </div>
-        <h4 class="mb-3 text-start fw-bold" style="color: #f59e0b; font-family: 'Courier New'; letter-spacing: 1px;"><i class="bi bi-journal-text"></i> TALLY PRIME DAILY SALES SUMMARY</h4>
+        <h4 class="mb-3 text-start fw-bold" style="color: #f59e0b; letter-spacing: 1px;"><i class="bi bi-journal-text"></i> TALLY PRIME DAILY SALES SUMMARY</h4>
         <div class="table-responsive rounded border border-secondary shadow">
             <table class="table tally-table table-bordered align-middle" style="width: 100%;">
                 <thead>
                     <tr>
-                        <th style="width: 10%;">DATE</th>
-                        <th style="width: 10%;">BILL NO</th>
-                        <th style="width: 25%;">CUSTOMER NAME</th>
-                        <th style="width: 35%;">ITEMS DESCRIPTION SUMMARY</th>
-                        <th style="width: 8%;">TOTAL QTY</th>
-                        <th style="width: 12%;">TOTAL AMOUNT</th>
+                        <th style="width: 12%;">DATE</th>
+                        <th style="width: 12%;">BILL NO</th>
+                        <th style="width: 28%;">CUSTOMER NAME</th>
+                        <th style="width: 38%;">ITEMS DESCRIPTION SUMMARY</th>
+                        <th style="width: 10%;">TOTAL QTY</th>
                     </tr>
                 </thead>
                 <tbody id="billingHistoryBody">
-                    <tr><td colspan="6" class="text-center py-4 text-muted">History load ho rahi hai...</td></tr>
+                    <tr><td colspan="5" class="text-center py-4 text-muted">History load ho rahi hai...</td></tr>
                 </tbody>
             </table>
         </div>
@@ -278,10 +357,10 @@
             <label for="inward_filter_date" style="font-weight: 800; color: #22c55e;"><i class="bi bi-calendar3"></i> VIEW DATE REGISTER:</label>
             <input type="date" id="inward_filter_date" class="form-control" style="width: 220px; display: inline-block;">
             <button class="btn btn-blue-custom fw-bold" onclick="loadInwardHistory()"><i class="bi bi-search"></i> Check Summary</button>
-            <button class="btn btn-secondary fw-bold" style="padding: 10px 20px;" onclick="resetInwardDateToToday()"><i class="bi bi-brightness-high"></i> Today</button>
+            <button class="btn btn-secondary-custom" onclick="resetInwardDateToToday()"><i class="bi bi-brightness-high"></i> Today</button>
         </div>
 
-        <h4 class="mb-3 text-start fw-bold" style="color: #22c55e; font-family: 'Courier New'; letter-spacing: 1px;"><i class="bi bi-journal-check"></i> TALLY PRIME INWARD DAYBOOK</h4>
+        <h4 class="mb-3 text-start fw-bold" style="color: #22c55e; letter-spacing: 1px;"><i class="bi bi-journal-check"></i> TALLY PRIME INWARD DAYBOOK</h4>
         <div class="table-responsive rounded border border-secondary shadow">
             <table class="table tally-table table-bordered align-middle" style="width: 100%;">
                 <thead>
@@ -291,12 +370,11 @@
                         <th style="width: 40%;">PRODUCT DETAILS</th>
                         <th style="width: 13%;">SIZE</th>
                         <th style="width: 10%;">COLOUR</th>
-                        <th style="width: 8%;">QTY ADDED</th>
-                        <th style="width: 12%;">RATE (₹)</th>
+                        <th style="width: 15%;">QTY ADDED</th>
                     </tr>
                 </thead>
                 <tbody id="inwardHistoryBody">
-                    <tr><td colspan="7" class="text-center py-4 text-muted">History load ho rahi hai...</td></tr>
+                    <tr><td colspan="6" class="text-center py-4 text-muted">History load ho rahi hai...</td></tr>
                 </tbody>
             </table>
         </div>
@@ -305,7 +383,6 @@
 </div>
 
 <script>
-    // Automatically set default inputs to TODAY's date string on DOM initial startup
     document.addEventListener("DOMContentLoaded", function() {
         let todayStr = new Date().toISOString().split('T')[0];
         if(document.getElementById('bill_filter_date')) {
@@ -334,6 +411,7 @@
             element.classList.add('active-tab');
         } else {
             let links = document.querySelectorAll('.nav-link-custom');
+            if(panelId === 'search-desk') links[0].classList.add('active-tab');
             if(panelId === 'billing-desk') links[1].classList.add('active-tab');
             if(panelId === 'inward-desk') links[2].classList.add('active-tab');
             if(panelId === 'bill-history-desk') links[3].classList.add('active-tab');
@@ -341,7 +419,6 @@
         }
     }
 
-    // NEW LIVE TOTAL CALCULATION LOGIC
     function calculateDoubleDiscountJS(grossAmount, discountStr) {
         if (!discountStr || discountStr.trim() === "" || discountStr.trim() === "0") {
             return grossAmount;
@@ -385,7 +462,6 @@
         document.getElementById('liveTotalDisplay').value = '₹' + grandTotal.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     }
 
-    // TALLY REGISTER DATA FETCH: BILLING HISTORY LOGIC
     function loadBillingHistory() {
         let historyBody = document.getElementById('billingHistoryBody');
         let selectedDate = document.getElementById('bill_filter_date').value;
@@ -394,12 +470,11 @@
             return;
         }
 
-        // Convert YYYY-MM-DD display look for header banner text
         let displayDateParts = selectedDate.split('-');
         let cleanDisplayDate = displayDateParts[2] + '/' + displayDateParts[1] + '/' + displayDateParts[0];
         document.getElementById('total_sale_header_title').innerText = cleanDisplayDate;
 
-        historyBody.innerHTML = '<tr><td colspan="6" class="text-center py-4 text-muted">Data load ho raha hai...</td></tr>';
+        historyBody.innerHTML = '<tr><td colspan="5" class="text-center py-4 text-muted">Data load ho raha hai...</td></tr>';
 
         fetch('/api/today_billing_summary?date=' + selectedDate)
         .then(res => res.json())
@@ -407,28 +482,36 @@
             document.getElementById('todaySellingTotal').innerText = '₹' + data.total_selling_amount.toLocaleString('en-IN', { minimumFractionDigits: 2 });
             historyBody.innerHTML = '';
             if(!data.history || data.history.length === 0) {
-                historyBody.innerHTML = '<tr><td colspan="6" class="text-center py-4 text-warning">ℹ️ Is selected date par koi bhi bill nahi kata hai! Displays blank workspace.</td></tr>';
+                historyBody.innerHTML = '<tr><td colspan="5" class="text-center py-4 text-warning">ℹ️ Is selected date par koi bhi bill nahi kata hai! Displays blank workspace.</td></tr>';
                 return;
             }
             data.history.forEach(row => {
+                let splitItemsHTML = "";
+                if (row.items_summary) {
+                    let itemsArray = row.items_summary.split(',');
+                    itemsArray.forEach(item => {
+                        if(item.trim() !== "") {
+                            splitItemsHTML += `<span class="summary-item-line"><i class="bi bi-arrow-right-short text-warning"></i> ${item.trim()}</span>`;
+                        }
+                    });
+                }
+
                 let tr = document.createElement('tr');
                 tr.innerHTML = `
                     <td class="text-center">${row.date}</td>
                     <td class="text-center text-warning">${row.bill_no}</td>
                     <td class="text-uppercase">${row.customer_name}</td>
-                    <td class="text-muted text-uppercase">${row.items_summary}</td>
+                    <td class="text-uppercase" style="padding: 8px 12px;">${splitItemsHTML}</td>
                     <td class="text-center text-info">${row.total_qty}</td>
-                    <td class="text-end text-success fw-bold" style="text-align: right;">₹${parseFloat(row.total_amount).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</td>
                 `;
                 historyBody.appendChild(tr);
             });
         })
         .catch(err => {
-            historyBody.innerHTML = '<tr><td colspan="6" class="text-center text-danger py-4">Billing Daybook clear stream network failure!</td></tr>';
+            historyBody.innerHTML = '<tr><td colspan="5" class="text-center text-danger py-4">Billing Daybook clear stream network failure!</td></tr>';
         });
     }
 
-    // TALLY REGISTER DATA FETCH: INWARD DAYBOOK LOGIC
     function loadInwardHistory() {
         let inwardBody = document.getElementById('inwardHistoryBody');
         let selectedDate = document.getElementById('inward_filter_date').value;
@@ -437,14 +520,14 @@
             return;
         }
 
-        inwardBody.innerHTML = '<tr><td colspan="7" class="text-center py-4 text-muted">Maal load ho raha hai...</td></tr>';
+        inwardBody.innerHTML = '<tr><td colspan="6" class="text-center py-4 text-muted">Maal load ho raha hai...</td></tr>';
 
         fetch('/api/today_inward_summary?date=' + selectedDate)
         .then(res => res.json())
         .then(data => {
             inwardBody.innerHTML = '';
             if(!data || data.length === 0) {
-                inwardBody.innerHTML = '<tr><td colspan="7" class="text-center py-4 text-warning">ℹ️ Is selected date par koi maal inward nahi kiya gaya hai!</td></tr>';
+                inwardBody.innerHTML = '<tr><td colspan="6" class="text-center py-4 text-warning">ℹ️ Is selected date par koi maal inward nahi kiya gaya hai!</td></tr>';
                 return;
             }
             data.forEach(row => {
@@ -456,13 +539,12 @@
                     <td class="text-center text-bright-size">${row.size}</td>
                     <td class="text-center text-bright-color">${row.colour}</td>
                     <td class="text-center text-success">${row.qty}</td>
-                    <td class="text-end text-bright-price" style="text-align: right;">₹${parseFloat(row.price).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</td>
                 `;
                 inwardBody.appendChild(tr);
             });
         })
         .catch(err => {
-            inwardBody.innerHTML = '<tr><td colspan="7" class="text-center text-danger py-4">Inward Daybook stream network failure!</td></tr>';
+            inwardBody.innerHTML = '<tr><td colspan="6" class="text-center text-danger py-4">Inward Daybook stream network failure!</td></tr>';
         });
     }
 
@@ -561,7 +643,6 @@
         updateLiveTotal();
     }
 
-    // === EKDAM FIXED AND AUTOMATIC INWARD FUNCTION ===
     function sendToInwardForm(srNo, name, size, colour, price) {
         document.getElementById('inw_sr').value = srNo || '';
         document.getElementById('inw_name').value = name;
